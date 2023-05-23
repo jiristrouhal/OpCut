@@ -87,3 +87,15 @@ def __sort_unmatching_stock_and_lengths(
 			sorted_stock.append(next_item_length)
 
 	return sorted_lengths, sorted_stock
+
+
+_memo:Dict[str,Tuple[List[Length],List[int]]] = dict()
+def _maximize_matching_ends(
+	length_sum:int, 
+	stock_length_sum:int, 
+	lengths:List[Length], 
+	stock:List[int]
+	)->Tuple[List[Length],List[int]]:
+		return lengths.copy(), stock.copy()
+
+
