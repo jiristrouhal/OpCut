@@ -2,7 +2,7 @@ import unittest
 import sortall
 
 
-class Test_Signle_Length(unittest.TestCase):
+class Test_Single_Length(unittest.TestCase):
     
 	def test_dummy(self):
 		pass
