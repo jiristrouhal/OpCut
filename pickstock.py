@@ -1,3 +1,4 @@
+from __future__ import annotations
 import dataclasses
 from typing import List, Dict
 
@@ -6,58 +7,100 @@ from typing import List, Dict
 class Stock:
 	length:int
 	price:int
+	def __new__(cls,length:int,price:int)->Stock:
+		if length<=0:
+			raise ValueError(f"Stock can have only positive length (curent value: {length}).")
+		if price<=0:
+			raise ValueError(f"Stock can have only positive price (current value: {price}).")
+		return super().__new__(cls)
 
 
 @dataclasses.dataclass
 class Picked:
-	_cost:int = 0
-	_items:Dict[int,int] = dataclasses.field(default_factory=dict)
-	@property
-	def cost(self)->int: return self._cost
-	@property
-	def items(self)->Dict[int,int]: return self._items
+	cost:int = 0
+	items:Dict[int,int] = dataclasses.field(default_factory=dict)
 
-	def add_stock(self,stock:Stock)->None: 
-		self._cost+=stock.price
-		if stock.length not in self._items: 
-			self._items[stock.length] = 1
-		else: self._items[stock.length] += 1
+	@property
+	def total_length(self)->int: 
+		totlength = 0
+		for length, count in self.items.items(): totlength += length*count
+		return totlength
+
+	@property
+	def n_of_items(self)->int: 
+		n = 0
+		for nitems in self.items.values():
+			n+=nitems
+		return n
 	
+	def __repr__(self)->str:
+		return f"Picked(cost={self.cost}, items={self.items}, total_length={self.total_length})"
 
-def ecopick(lengths:List[int],available_stock:List[Stock])->Picked:
-	if len(lengths)==0 or len(available_stock)==0: 
-		return Picked()
-	return _pick_to_cover_with_minimum_cost(sum(lengths),available_stock)
+	def add_stock(self, stock:Stock)->None: 
+		self.cost += stock.price
+		if stock.length not in self.items: 
+			self.items[stock.length] = 1
+		else: self.items[stock.length] += 1
+
+	def copy(self)->Picked:
+		new = Picked()
+		new.items = self.items.copy()
+		new.cost = self.cost
+		return new
 
 
 _memo:Dict[int,Picked] = dict()
-def _pick_to_cover_with_minimum_cost(l:int,stock:List[Stock])->Picked:
+def ecopick(lengths:List[int],stock:List[Stock])->Picked:
 	global _memo
-	_memo = dict()
-	picked = _pick_for_sublength(l,stock)
+	if not bool(stock): return __pick_nothing()
+	__raise_exception_if_some_nonpositive_length(lengths)
+
+	__empty_memo()
+	# sort to prevent program from skipping stock, which's cost and length is multiple of some
+	# previously tried. After the sort, the program saves results for the longer stock.
+	stock.sort(key=lambda x: x.length, reverse=True)
+	picked = __pick_for_sublength(sum(lengths),stock)
 	return picked
 
 
-def _pick_for_sublength(length:int,stock:List[Stock])->Picked:
-	if length<=0: return Picked()
+def __pick_nothing()->Picked:
+	picked = Picked()
+	return picked
+
+
+def __empty_memo()->None:
+	global _memo 
+	_memo=dict()
+
+
+def __raise_exception_if_some_nonpositive_length(lengths:List[int]):
+	for length in lengths:
+		if length<=0: raise ValueError(f"Specify positive lengths (found length {length}).")
+
+
+def __pick_for_sublength(sublength:int, stock:List[Stock])->Picked:
+	if sublength<=0: return __pick_nothing()
 
 	global _memo
-	if not length in _memo:_append_memo_with_new_sublength(length,stock)
-	return _memo[length]
+	best = Picked()
+	if not sublength in _memo: 
+		best = __pick_for_sublength(sublength-stock[0].length, stock)
+		best.add_stock(stock[0])
+		for i in range(1,len(stock)):
+			new = __pick_for_sublength(sublength-stock[i].length, stock)
+			new.add_stock(stock[i])
+			best = __select_better_pick(best,new)
+		_memo[sublength] = best
+	# Do not return the original memo (in other case, the memo contents would be rewritten later).
+	return _memo[sublength].copy()
 
 
-def _append_memo_with_new_sublength(length:int,stock:List[Stock])->None:
-	global _memo
-	lowest_found_cost = -1
-	optimally_picked = Picked()
-	for item in stock:
-		picked = _pick_for_sublength(length-item.length, stock)
-		cost = picked.cost+item.price
-		if(lowest_found_cost>cost or lowest_found_cost==-1):
-			lowest_found_cost = cost
-			picked.add_stock(item)
-			optimally_picked = picked
-	_memo[length] = optimally_picked
-
+def __select_better_pick(best:Picked, new:Picked)->Picked:
+	if(new.cost<best.cost): return new
+	elif(new.cost>best.cost): return best
+	else:
+		if new.n_of_items<best.n_of_items: 
+			return new
+	return best
 
 
