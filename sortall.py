@@ -32,17 +32,9 @@ def mincutsort(lengths_list:List[int],stock_dict:Dict[int,int])->Tuple[List[Leng
 	stock:List[Ordered_Stock] = __prepare_stock_for_taking(stock_dict)
 
 	matching_lengths = __pick_lengths_and_stock_of_same_length(lengths,stock)
-	sorted_lengths = matching_lengths.copy() + lengths
-	sorted_stock = [l.length for l in matching_lengths]
-
-	k=0
-	while k<len(stock):
-		next_item_length = stock[k].take()
-		if next_item_length==0: 
-			k+=1
-			continue
-		else:
-			sorted_stock.append(next_item_length)
+	remaining_sorted_lengths, remaning_sorted_stock = __sort_unmatching_stock_and_lengths(lengths,stock)
+	sorted_lengths = matching_lengths.copy() + remaining_sorted_lengths
+	sorted_stock = [l.length for l in matching_lengths] + remaning_sorted_stock
 
 	return sorted_lengths, sorted_stock
 
@@ -75,3 +67,23 @@ def __pick_lengths_and_stock_of_same_length(
 				lengths.remove(length_item)
 				matches.append(length_item)
 	return matches
+
+
+def __sort_unmatching_stock_and_lengths(
+	lengths:List[Length],
+	stock:List[Ordered_Stock]
+	)->Tuple[List[Length],List[int]]:
+
+	sorted_stock:List[int] = list()
+	sorted_lengths:List[Length] = lengths.copy()
+	
+	k=0
+	while k<len(stock):
+		next_item_length = stock[k].take()
+		if next_item_length==0: 
+			k+=1
+			continue
+		else:
+			sorted_stock.append(next_item_length)
+
+	return sorted_lengths, sorted_stock
