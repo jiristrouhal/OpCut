@@ -68,7 +68,5 @@ class Test_Multiple_Lengths(unittest.TestCase):
 		self.assertListEqual(sorted_stock, [110,90])
 
 
-
-
 if __name__=='__main__':
 	unittest.main()
