@@ -19,6 +19,9 @@ class Ordered_Stock:
 			return self.length
 		return 0
 	
+	def __str__(self)->str: 
+		return "Length: "+str(self.length)+"; count: "+str(self.count)
+	
 	
 	
 
@@ -34,7 +37,8 @@ def mincutsort(lengths_list:List[int],stock_dict:Dict[int,int])->Tuple[List[Leng
 	stock:List[Ordered_Stock] = __prepare_stock_for_taking(stock_dict)
 
 	matching_lengths = __pick_lengths_and_stock_of_same_length(lengths,stock)
-	remaining_sorted_lengths, remaning_sorted_stock = __sort_unmatching_stock_and_lengths(lengths,stock)
+	remaining_sorted_lengths, remaning_sorted_stock = \
+		__sort_unmatching_stock_and_lengths(lengths,stock)
 	sorted_lengths = matching_lengths.copy() + remaining_sorted_lengths
 	sorted_stock = [l.length for l in matching_lengths] + remaning_sorted_stock
 
@@ -71,6 +75,7 @@ def __pick_lengths_and_stock_of_same_length(
 	return matches
 
 
+_memo:Dict[str,Tuple[int,List[Length],List[int]]] = dict()
 def __sort_unmatching_stock_and_lengths(
 	lengths:List[Length],
 	stock:List[Ordered_Stock]
@@ -82,31 +87,63 @@ def __sort_unmatching_stock_and_lengths(
 	stock_length_sum = __sum_ordered_stock_lengths(stock)
 	lengths_sum = __sum_lengths(lengths)
 	
-	sorted_lengths, sorted_stock = \
+	global _memo
+	_memo = dict()
+	cuts, sorted_lengths, sorted_stock = \
 		_maximize_matching_ends(lengths_sum,stock_length_sum,lengths,stock)
-
+	print(cuts)
 	return sorted_lengths, sorted_stock
 
 
-_memo:Dict[str,Tuple[List[Length],List[int]]] = dict()
 def _maximize_matching_ends(
-	length_sum:int, 
-	stock_length_sum:int, 
-	lengths:List[Length], 
-	stock:List[Ordered_Stock]
-	)->Tuple[List[Length],List[int]]:
+	l_sum:int, 
+	s_sum:int, 
+	l:List[Length], 
+	s:List[Ordered_Stock]
+	)->Tuple[int,List[Length],List[int]]:
 
-	sorted_stock:List[int] = list()
-	k = 0
-	while k<len(stock):
-		taken_item_length = stock[k].take()
-		if taken_item_length==0: 
-			k+=1
-			continue
-		else:
-			sorted_stock.append(taken_item_length)
+	if s_sum==0: return 0, l.copy(), []
+	elif l_sum==0:
+		# if s_sum is not zero, exactly one piece of one item of stock list 's' should be available"
+		return 0, [], [si.length for si in s if si.count>0]
+	
+	global _memo
+	label=str(l)+str(s)
+	if label in _memo: return _memo[label]
 
-	return lengths.copy(), sorted_stock.copy()
+	# The highest possible maximum number of cuts corresponds to no match between ends
+	# of lengths and the stock items. Add one to enable assigning some content to opt_sorted_## lists."
+	score = len(l)+2
+	opt_l:List[Length] = list()
+	opt_s:List[int] = list()
+
+	if l_sum>=s_sum:
+		for li in l:
+			reduced_lengths = l.copy()
+			reduced_lengths.remove(li)
+			cuts, sorted_l, sorted_s = _maximize_matching_ends(l_sum-li.length,s_sum,reduced_lengths,s.copy())
+			if l_sum!=s_sum: cuts += 1 
+			if cuts<max_cuts:
+				max_cuts=cuts
+				opt_l=sorted_l.copy()
+				opt_l.append(li)
+				opt_s=sorted_s.copy()
+
+	else:
+		for i in range(len(s)):
+			reduced_stock = s.copy()
+			taken_length = reduced_stock[i].take()
+			if taken_length==0: continue
+			cuts, sorted_l, sorted_s = _maximize_matching_ends(l_sum,s_sum-taken_length,l.copy(),reduced_stock)
+			cuts += 1 
+			if cuts<max_cuts:
+				max_cuts=cuts
+				opt_l=sorted_l.copy()
+				opt_s=sorted_s.copy()
+				opt_s.append(s[i].length)
+
+	_memo[label] = (max_cuts, opt_l.copy(), opt_s.copy())
+	return _memo[label]
 
 
 def __sum_ordered_stock_lengths(stock:List[Ordered_Stock]):
