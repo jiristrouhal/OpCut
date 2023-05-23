@@ -11,13 +11,15 @@ class Length:
 @dataclasses.dataclass
 class Ordered_Stock:
 	length:int
-	_count:int
+	count:int
 
 	def take(self)->int: 
-		if self._count>0: 
-			self._count -= 1
+		if self.count>0: 
+			self.count -= 1
 			return self.length
 		return 0
+	
+	
 	
 
 class NotEnoughStockItems(Exception): pass
@@ -76,15 +78,12 @@ def __sort_unmatching_stock_and_lengths(
 
 	sorted_stock:List[int] = list()
 	sorted_lengths:List[Length] = lengths.copy()
+
+	stock_length_sum = __sum_ordered_stock_lengths(stock)
+	lengths_sum = __sum_lengths(lengths)
 	
-	k=0
-	while k<len(stock):
-		next_item_length = stock[k].take()
-		if next_item_length==0: 
-			k+=1
-			continue
-		else:
-			sorted_stock.append(next_item_length)
+	sorted_lengths, sorted_stock = \
+		_maximize_matching_ends(lengths_sum,stock_length_sum,lengths,stock)
 
 	return sorted_lengths, sorted_stock
 
@@ -94,8 +93,32 @@ def _maximize_matching_ends(
 	length_sum:int, 
 	stock_length_sum:int, 
 	lengths:List[Length], 
-	stock:List[int]
+	stock:List[Ordered_Stock]
 	)->Tuple[List[Length],List[int]]:
-		return lengths.copy(), stock.copy()
+
+	sorted_stock:List[int] = list()
+	k = 0
+	while k<len(stock):
+		taken_item_length = stock[k].take()
+		if taken_item_length==0: 
+			k+=1
+			continue
+		else:
+			sorted_stock.append(taken_item_length)
+
+	return lengths.copy(), sorted_stock.copy()
+
+
+def __sum_ordered_stock_lengths(stock:List[Ordered_Stock]):
+	stock_length_sum = 0
+	for item in stock: stock_length_sum += item.count*item.length
+	return stock_length_sum
+
+def __sum_lengths(lengths:List[Length]):
+	lengths_sum = 0
+	for item in lengths: lengths_sum += item.length
+	return lengths_sum
+
+
 
 
