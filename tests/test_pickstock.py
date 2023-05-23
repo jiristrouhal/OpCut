@@ -70,15 +70,10 @@ class Test_Single_Length(unittest.TestCase):
 			pickstock.ecopick(lengths,stock)
 
 	def test_nonpositive_stock_length_or_stock_cost_raises_exception(self):
-		lengths = [100]
-		with self.assertRaises(ValueError):
-			stock = [Stock(-50, 500)]
-		with self.assertRaises(ValueError):
-			stock = [Stock(0, 500)]
-		with self.assertRaises(ValueError):
-			stock = [Stock(50, -500)]
-		with self.assertRaises(ValueError):
-			stock = [Stock(50, 0)]
+		with self.assertRaises(ValueError): Stock(-50, 500)
+		with self.assertRaises(ValueError): Stock(0, 500)
+		with self.assertRaises(ValueError): Stock(50, -500)
+		with self.assertRaises(ValueError): Stock(50, 0)
 
 
 import random
