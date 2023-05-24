@@ -1,6 +1,6 @@
 from __future__ import annotations
 import dataclasses
-from typing import List, Dict
+from typing import List, Dict, Literal
 
 
 @dataclasses.dataclass(frozen=True)
@@ -49,9 +49,12 @@ class Picked:
 		return new
 
 
+_priority:str = ""
 _memo:Dict[int,Picked] = dict()
-def ecopick(lengths:List[int],stock:List[Stock])->Picked:
-	global _memo
+def ecopick(lengths:List[int],stock:List[Stock],priority:Literal['cost','count','cost and count']='cost')->Picked:
+	global _memo, _priority
+
+	_priority = priority
 	if not bool(stock): return __pick_nothing()
 	__raise_exception_if_some_nonpositive_length(lengths)
 
@@ -89,13 +92,21 @@ def __pick_for_sublength(sublength:int, stock:List[Stock])->Picked:
 		for i in range(1,len(stock)):
 			new = __pick_for_sublength(sublength-stock[i].length, stock)
 			new.add_stock(stock[i])
-			best = __select_better_pick(best,new)
+			best = __choose(best,new)
 		_memo[sublength] = best
 	# Do not return the original memo (in other case, the memo contents would be rewritten later).
 	return _memo[sublength].copy()
 
 
-def __select_better_pick(best:Picked, new:Picked)->Picked:
+def __choose(best:Picked,new:Picked):
+	global _priority
+	match _priority:
+		case 'cost': return __choose_by_least_cost(best,new)
+		case 'count': return __choose_by_least_count(best,new)
+		case 'cost and count': return __choose_by_compromise_of_least_count_and_cost(best,new)
+
+
+def __choose_by_least_cost(best:Picked, new:Picked)->Picked:
 	if(new.cost<best.cost): return new
 	elif(new.cost>best.cost): return best
 	else:
@@ -103,4 +114,21 @@ def __select_better_pick(best:Picked, new:Picked)->Picked:
 			return new
 	return best
 
+
+def __choose_by_least_count(best:Picked, new:Picked)->Picked:
+	if(new.n_of_items<best.n_of_items): return new
+	elif(new.n_of_items>best.n_of_items): return best
+	else:
+		if new.cost<best.cost: 
+			return new
+	return best
+
+
+def __choose_by_compromise_of_least_count_and_cost(best:Picked,new:Picked)->Picked:
+	x = (new.n_of_items*new.cost)/(best.n_of_items*best.cost)
+	if x<1: return new
+	elif(x>1): return best
+	else:
+		if new.total_length>best.total_length: return new
+		else: return best
 
