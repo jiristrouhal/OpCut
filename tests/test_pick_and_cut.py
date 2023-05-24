@@ -31,4 +31,12 @@ class Test_Single_Length(unittest.TestCase):
 		self.assertEqual(result.order.total_price,1200)
 
 
+class Test_Multiple_Lengths(unittest.TestCase):
+
+	def test_three_distinct_lengths(self):
+		lengths = [1000,300,400]
+		stock = [Stock(120,1200),Stock(210,2000),Stock(250,2100)]
+		result = pick_and_cut.pickandcut(lengths,stock)
+
+
 if __name__=='__main__': unittest.main()
