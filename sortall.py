@@ -98,7 +98,6 @@ def __sort_unmatching_stock_and_lengths(
 	return sorted_lengths, sorted_stock
 
 
-p,m = 0,0
 def __maximize_matching_ends(
 	l_sum:int, 
 	s_sum:int, 
@@ -107,23 +106,18 @@ def __maximize_matching_ends(
 	)->Tuple[int,int,List[Length],List[int]]:
 
 	if s_sum==0: return 0, 0, l.copy(), []
-	elif l_sum==0:
-		# if s_sum is not zero, exactly one piece of one item of stock list 's' should be available"
+	elif l_sum==0: # if s_sum is not zero, exactly one piece of one item of stock list 's' should be available"
 		remaining_stock:List[int] = list()
 		i=0
 		while i<len(s):
 			taken_length = s[i].take()
 			if taken_length==0: i+=1
 			else: remaining_stock.append(s[i].length)
-			
 		return 0, 0, [], remaining_stock
 	
-	global _memo, m, p
+	global _memo
 	label=str(l)+str(s)
-	if label in _memo: 
-		m += 1
-		return _memo[label]
-	p+=1
+	if label in _memo: return _memo[label]
 
 	# The highest possible maximum number of cuts corresponds to no match between ends
 	# of lengths and the stock items. Add one to enable assigning some content to opt_sorted_## lists."
