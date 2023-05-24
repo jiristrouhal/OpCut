@@ -33,6 +33,11 @@ def cut(lengths:List[Length],stock:List[int])->Tuple[List[Cutted_Length],List[Cu
 	for l in lengths: cutted_lengths.append(Cutted_Length(l,[]))
 	for s in stock: cutted_stock.append(Cutted_Stock(s,[]))
 
+
+	for l in lengths: assert(l.length>0)
+	for s in stock: assert(s>0)
+
+
 	i,j = 0,0
 	dist_to_length_end = lengths[i].length
 	dist_to_stock_end = stock[j]
@@ -43,6 +48,10 @@ def cut(lengths:List[Length],stock:List[int])->Tuple[List[Cutted_Length],List[Cu
 		if dist_to_length_end<dist_to_stock_end:
 			cutted_lengths[i].pieces.append(dist_to_length_end)
 			cutted_stock[j].pieces.append(dist_to_length_end)
+
+			assert(cutted_stock[j].pieces[-1]>0)
+			assert(cutted_lengths[i].pieces[-1]>0)
+
 			i += 1
 			dist_to_stock_end -= dist_to_length_end
 			if i<m: dist_to_length_end = lengths[i].length
@@ -55,7 +64,7 @@ def cut(lengths:List[Length],stock:List[int])->Tuple[List[Cutted_Length],List[Cu
 			if j<n: dist_to_stock_end = stock[j]
 			if dist_to_length_end==0: 
 				i += 1
-				if j<m: dist_to_length_end = lengths[i].length
+				if i<m: dist_to_length_end = lengths[i].length
 
 	return cutted_lengths, cutted_stock
 
