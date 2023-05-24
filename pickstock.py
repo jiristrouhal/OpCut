@@ -3,6 +3,11 @@ import dataclasses
 from typing import List, Dict, Literal
 
 
+COST = 'cost'
+COUNT = 'count'
+COST_AND_COUNT = 'cost and count'
+
+
 @dataclasses.dataclass(frozen=True)
 class Stock:
 	length:int

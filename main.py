@@ -1,5 +1,5 @@
 import pickstock,sortall,cut
-from typing import List, Dict
+from typing import List, Dict, Literal
 import dataclasses
 
 
@@ -9,9 +9,9 @@ class Stock:
 	price:int
 
 
-def pickandcut(lengths:List[int],stock:List[Stock]):
+def pickandcut(lengths:List[int],stock:List[Stock], priority:Literal['cost','count','cost and count']='cost'):
 	prepared_stock = [pickstock.Stock(s.length,s.price) for s in stock]
-	picked_stock = pickstock.ecopick(lengths, prepared_stock, priority='cost and count')
+	picked_stock = pickstock.ecopick(lengths, prepared_stock, priority)
 	sorted_lengths, sorted_stock = sortall.mincutsort(lengths,picked_stock.items,)
 	prepared_sorted_lengths = [cut.Length(l.length,l.id) for l in sorted_lengths]
 	cutted_lengths, cutted_stock = cut.cut(prepared_sorted_lengths,sorted_stock)
