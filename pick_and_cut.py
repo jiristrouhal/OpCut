@@ -41,8 +41,3 @@ def printcutted(cost:int, order:Dict[int,int],lengths:List[cut.Cutted_Length],st
 			print(f"{p}, ",end='')
 		print("")
 
-
-L = [100, 200, 150, 230, 95, 45, 255, 100, 100, 100, 250, 120, 45, 78, 80]
-S = [Stock(100,1000), Stock(200,2000), Stock(150,1500), Stock(250,2500)]
-order,l,s = pickandcut(L,S)
-printcutted(order.cost, order.items, l,s)
