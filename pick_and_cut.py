@@ -35,7 +35,7 @@ def pickandcut(lengths:List[int],stock:List[Stock], priority:Literal['cost','cou
 	raw_combined_lengths, raw_cutted_stock = cut.cut(prepared_sorted_lengths,sorted_stock)
 	raw_combined_lengths.sort(key = lambda x: x.original.id)
 
-	assert(sum([sum(l.pieces) for l in raw_combined_lengths])<=sum([sum(s.pieces) for s in raw_cutted_stock]))
+	assert(sum([sum(l.pieces) for l in raw_combined_lengths]) <= sum([sum(s.pieces) for s in raw_cutted_stock]))
 
 	combined_lengths:List[Combined_Length] = list()
 	cutted_stock:List[Cutted_Stock] = list()
@@ -44,6 +44,8 @@ def pickandcut(lengths:List[int],stock:List[Stock], priority:Literal['cost','cou
 	for s in raw_cutted_stock:
 		cutted_stock.append(Cutted_Stock(s.original, s.pieces))
 	ordered_stock = Ordered_Stock(raw_ordered_stock.cost,raw_ordered_stock.items)
+
+	assert(sum([sum(l.pieces) for l in raw_combined_lengths]) == sum([sum(l.pieces) for l in combined_lengths]))
 
 	return ordered_stock, combined_lengths, cutted_stock
 

@@ -109,7 +109,14 @@ def __maximize_matching_ends(
 	if s_sum==0: return 0, 0, l.copy(), []
 	elif l_sum==0:
 		# if s_sum is not zero, exactly one piece of one item of stock list 's' should be available"
-		return 0, 0, [], [si.length for si in s if si.count]
+		remaining_stock:List[int] = list()
+		i=0
+		while i<len(s):
+			taken_length = s[i].take()
+			if taken_length==0: i+=1
+			else: remaining_stock.append(s[i].length)
+			
+		return 0, 0, [], remaining_stock
 	
 	global _memo, m, p
 	label=str(l)+str(s)
@@ -137,7 +144,7 @@ def __maximize_matching_ends(
 			score_1, score_2, sorted_l, sorted_s = \
 				__maximize_matching_ends(l_sum-li.length,s_sum,reduced_lengths,avail_stock)
 			if not ls_sum_diff: score_1 += 1
-			score_2 -= ls_sum_diff2
+			score_2 += ls_sum_diff2
 			if (score_1>max_score_1) or (score_1==max_score_1 and score_2>max_score_2):
 				max_score_1=score_1
 				max_score_2=score_2
@@ -152,7 +159,7 @@ def __maximize_matching_ends(
 			score_1, score_2, sorted_l, sorted_s = \
 				__maximize_matching_ends(l_sum,s_sum-taken_length,l.copy(),reduced_stock)
 			reduced_stock[i].put_back()
-			score_2 -= ls_sum_diff2
+			score_2 += ls_sum_diff2
 			if (score_1>max_score_1) or (score_1==max_score_1 and score_2>max_score_2):
 				max_score_1=score_1
 				max_score_2=score_2
@@ -160,7 +167,7 @@ def __maximize_matching_ends(
 				opt_s=sorted_s.copy()
 				opt_s.append(taken_length)
 
-	_memo[label] = (max_score_1, max_score_2, opt_l, opt_s)
+	_memo[label] = (max_score_1, max_score_2, opt_l.copy(), opt_s.copy())
 	return _memo[label]
 
 

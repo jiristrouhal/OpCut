@@ -12,6 +12,16 @@ class Test_Single_Length(unittest.TestCase):
 		self.assertListEqual(combined_lengths,[Combined_Length(200,[200])])
 		self.assertListEqual(cutted_stock,[Cutted_Stock(200,[200])])
 		self.assertDictEqual(ordered_stock.items,{200:1})
+		self.assertEqual(ordered_stock.total_price,1000)
+	
+	def test_stock_of_fourth_length(self):
+		lengths = [200]
+		stock = [Stock(50,300)]
+		ordered_stock, combined_lengths, cutted_stock = pick_and_cut.pickandcut(lengths,stock)
+		self.assertListEqual(combined_lengths,[Combined_Length(200,[50,50,50,50])])
+		self.assertListEqual(cutted_stock,[Cutted_Stock(50,[50]), Cutted_Stock(50,[50]), Cutted_Stock(50,[50]), Cutted_Stock(50,[50])])
+		self.assertDictEqual(ordered_stock.items,{50:4})
+		self.assertEqual(ordered_stock.total_price,1200)
 
 
 if __name__=='__main__': unittest.main()
