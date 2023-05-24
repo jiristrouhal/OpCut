@@ -35,8 +35,8 @@ def printcutted(lengths:List[cut.Cutted_Length],stock:List[cut.Cutted_Stock]):
 		print("")
 
 
-L = [100, 200, 150, 230, 95, 45, 255, 100, 158, 100, 250]
-S = [Stock(100,1000), Stock(250,1500)]
+L = [100, 200, 150, 230, 95, 45, 255, 100, 158, 100, 250, 120, 45, 78, 10, 56, 95]
+S = [Stock(100,1100), Stock(200,2000), Stock(150,1500)]
 
 l,s = pickandcut(L,S)
 printcutted(l,s)
