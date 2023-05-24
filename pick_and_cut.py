@@ -27,7 +27,14 @@ class Combined_Length:
 	pieces:List[int]
 
 
-def pickandcut(lengths:List[int],stock:List[Stock], priority:Literal['cost','count','cost and count']='cost'):
+@dataclasses.dataclass
+class Picked_And_Cutted:
+	order:Ordered_Stock
+	combined_lengths:List[Combined_Length]
+	cutted_stock:List[Cutted_Stock]
+
+
+def pickandcut(lengths:List[int],stock:List[Stock], priority:Literal['cost','count','cost and count']='cost')->Picked_And_Cutted:
 	prepared_stock = [pickstock.Stock(s.length,s.price) for s in stock]
 	raw_ordered_stock = pickstock.ecopick(lengths, prepared_stock, priority)
 	sorted_lengths, sorted_stock = sortall.mincutsort(lengths,raw_ordered_stock.items,)
@@ -47,23 +54,23 @@ def pickandcut(lengths:List[int],stock:List[Stock], priority:Literal['cost','cou
 
 	assert(sum([sum(l.pieces) for l in raw_combined_lengths]) == sum([sum(l.pieces) for l in combined_lengths]))
 
-	return ordered_stock, combined_lengths, cutted_stock
+	return Picked_And_Cutted(ordered_stock, combined_lengths, cutted_stock)
 
 
-def printcutted(cost:int, order:Dict[int,int],lengths:List[Combined_Length],stock:List[Cutted_Stock]):
-	stock.sort(key= lambda x: x.original_length)
+def printcutted(picked_and_cutted:Picked_And_Cutted)->None:
+	picked_and_cutted.cutted_stock.sort(key= lambda x: x.original_length)
 
 	print("Order:")
-	print(f"\tTotal cost: {cost}")
-	for length,count in order.items(): print(f"\t{length}: {count:3}×")
+	print(f"\tTotal cost: {picked_and_cutted.order.total_price}")
+	for length,count in picked_and_cutted.order.items.items(): print(f"\t{length}: {count:3}×")
 	print("Cutted stock:")
-	for s in stock:
+	for s in picked_and_cutted.cutted_stock:
 		print(f"\t{s.original_length:4} -> ",end='')
 		for p in s.pieces:
 			print(f"{p}, ",end='')
 		print("")
 	print("Combined lengths:")
-	for l in lengths:
+	for l in picked_and_cutted.combined_lengths:
 		print(f"\t{l.length:4} <- ",end='')
 		for p in l.pieces:
 			print(f"{p}, ",end='')
