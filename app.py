@@ -13,8 +13,11 @@ input_frame = tk.Frame(window)
 input_frame.pack(side=tk.TOP,expand=1)
 controls_frame = tk.Frame(window)
 controls_frame.pack(side=tk.TOP)
+save_frame = tk.Frame(window)
+save_frame.pack(side=tk.BOTTOM,expand=1)
 output_frame = tk.Frame(window)
 output_frame.pack(side=tk.BOTTOM,expand=2)
+
 
 
 from typing import List
@@ -153,7 +156,29 @@ def pickandcut_by_priority(lengths:List[int],stock:List[pc.Stock]):
 			return pc.pickandcut(lengths,stock,'cost and count')
 
 
-calculate_button = tk.Button(controls_frame,text=cz.CALCULATE,command=calculate).pack()
+calculate_button = tk.Button(controls_frame,text=cz.CALCULATE,command=calculate)
+calculate_button.pack()
 
+
+import datetime
+def __print()->None:
+	order = order_output.get("1.0",tk.END)
+	cutted_stock = cutted_stock_output.get("1.0",tk.END)
+	combined_lengths = combined_lengths_output.get("1.0",tk.END)
+	total = (order+cutted_stock+combined_lengths).strip()
+	if total=="":
+		return
+	now = str(datetime.datetime.now())
+	now = now.replace(":","-")[:-7]
+	filename = f"navrh_kusu_{now}.txt"
+	with open(filename,"w") as f:
+		f.write(order)
+		f.write(cutted_stock)
+		f.write(combined_lengths)
+		f.close()
+
+
+print_button = tk.Button(save_frame,text="Uložit",command=__print)
+print_button.pack(side=tk.BOTTOM)
 
 window.mainloop()
