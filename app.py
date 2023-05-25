@@ -40,6 +40,21 @@ def auto_add_space_before_number(event:tk.Event)->None:
 	return
 
 
+priority_frame = tk.Frame(input_frame)
+priority_frame.pack(side=tk.BOTTOM)
+priority_label = tk.Label(priority_frame, text=cz.WHAT_TO_MINIMIZE)
+priority_label.pack(side=tk.LEFT)
+
+
+priority_var = tk.StringVar(priority_frame, pc.pickstock.COST)
+priority_button_both = tk.Radiobutton(priority_frame, text=cz.BOTH, variable=priority_var, value=pc.pickstock.COST_AND_COUNT)
+priority_button_both.pack(side=tk.RIGHT)
+priority_button_items = tk.Radiobutton(priority_frame, text=cz.BOUGHT_STOCK_ITEMS, variable=priority_var, value=pc.pickstock.COUNT)
+priority_button_items.pack(side=tk.RIGHT)
+priority_button_cost = tk.Radiobutton(priority_frame, text=cz.COST, variable=priority_var, value=pc.pickstock.COST)
+priority_button_cost.pack(side=tk.RIGHT)
+
+
 vcmd = (window.register(is_int_list))
 lengths_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd,'%P'))
 lengths_input.bind("<KeyRelease>",auto_add_space_before_number)
@@ -107,7 +122,6 @@ def __redraw_cutted_stock(stock:List[pc.Cutted_Stock])->None:
 
 def __redraw_combined_lengths(lengths:List[pc.Combined_Length])->None:
 	lengths_str = __underline(cz.HOW_TO_COMBINE_LENGTHS)+"\n"
-	print(lengths)
 	for l in lengths:
 		lengths_str += f"{l.length:4} ← "
 		for piece in l.pieces[:-1]:
@@ -122,10 +136,21 @@ def calculate()->None:
 	lengths = __read_lengths_input()
 	stock = __read_stock_input()
 	if not (lengths and stock): return
-	result = pc.pickandcut(lengths,stock)
+	result = pickandcut_by_priority(lengths,stock)
 	__redraw_order(result.order)
 	__redraw_cutted_stock(result.cutted_stock)
 	__redraw_combined_lengths(result.combined_lengths)
+
+
+def pickandcut_by_priority(lengths:List[int],stock:List[pc.Stock]):
+	global priority_var
+	match priority_var.get():
+		case pc.pickstock.COST:
+			return pc.pickandcut(lengths,stock,'cost')
+		case pc.pickstock.COUNT:
+			return pc.pickandcut(lengths,stock,'count')
+		case pc.pickstock.COST_AND_COUNT:
+			return pc.pickandcut(lengths,stock,'cost and count')
 
 
 calculate_button = tk.Button(controls_frame,text=cz.CALCULATE,command=calculate).pack()
