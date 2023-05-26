@@ -43,6 +43,18 @@ def auto_add_space_before_number(event:tk.Event)->None:
 	return
 
 
+def restrict_characters_in_stock_entry(src:str)->bool:
+	is_valid = True
+	if src.strip()=="": return True
+	if src[0]==ITEM_DELIM: src=src[1:]
+	if src[-1]==ITEM_DELIM: src=src[:-1]
+	for item in src.split(ITEM_DELIM):
+		if not (re.fullmatch(r"[(),\d]+",item.strip()) or item==' '):
+			is_valid = False
+			break
+	return is_valid
+
+
 priority_frame = tk.Frame(input_frame)
 priority_frame.pack(side=tk.BOTTOM)
 priority_label = tk.Label(priority_frame, text=cz.WHAT_TO_MINIMIZE)
@@ -58,11 +70,12 @@ priority_button_cost = tk.Radiobutton(priority_frame, text=cz.COST, variable=pri
 priority_button_cost.pack(side=tk.RIGHT)
 
 
-vcmd = (window.register(is_int_list))
-lengths_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd,'%P'))
+vcmd_lengths = (window.register(is_int_list))
+vcmd_stock = (window.register(restrict_characters_in_stock_entry))
+lengths_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd_lengths,'%P'))
 lengths_input.bind("<KeyRelease>",auto_add_space_before_number)
 lengths_input.pack()
-stock_input = tk.Entry(input_frame,width=100)
+stock_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd_stock,'%P'))
 stock_input.pack()
 
 
@@ -161,7 +174,7 @@ calculate_button.pack()
 
 
 import datetime
-def __print()->None:
+def __save_printed_ouput_to_file()->None:
 	order = order_output.get("1.0",tk.END)
 	cutted_stock = cutted_stock_output.get("1.0",tk.END)
 	combined_lengths = combined_lengths_output.get("1.0",tk.END)
@@ -178,7 +191,7 @@ def __print()->None:
 		f.close()
 
 
-print_button = tk.Button(save_frame,text="Uložit",command=__print)
+print_button = tk.Button(save_frame,text="Uložit",command=__save_printed_ouput_to_file)
 print_button.pack(side=tk.BOTTOM)
 
 window.mainloop()
