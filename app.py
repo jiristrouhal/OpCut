@@ -19,19 +19,44 @@ output_frame = tk.Frame(window)
 output_frame.pack(side=tk.BOTTOM,expand=2)
 
 
-
 from typing import List
 import re
 ITEM_DELIM = ";"
 def is_int_list(src:str)->bool:
+	if src.strip()=="": return True
+	if src[0]==";": return False
+	if re.match(r";[\D]*;",src): return False 
+
+	if src[0]==ITEM_DELIM: src=src[1:]
+
+	for item in src.split(ITEM_DELIM):
+
+		item = item.strip()
+		if not (re.fullmatch(r"\d+",item.strip()) or re.fullmatch(r"[\w]*",item)):
+			return False
+		elif item!='' and item[0]=='0':
+			return False
+	return True
+
+
+def restrict_characters_in_stock_entry(src:str)->bool:
 	is_valid = True
-	if src.strip()=="": return is_valid
+	all_valid_stock_items = True
+	if src.strip()=="": return True
+	if src[0]==";": return False
+	if re.match(r";[\D]*;",src): return False 
+
 	if src[0]==ITEM_DELIM: src=src[1:]
 	if src[-1]==ITEM_DELIM: src=src[:-1]
 	for item in src.split(ITEM_DELIM):
-		if not (re.fullmatch(r"\d+",item.strip()) or item==' '):
+		if not (re.fullmatch(r"[(),\d]+",item.strip()) or re.fullmatch(r"[\w]*",item)):
 			is_valid = False
 			break
+		elif not re.fullmatch(r"\([\d]+[\s]*,[\s]*[\d]+\)",item.strip()) or item==' ':
+			all_valid_stock_items = False
+		
+	if not all_valid_stock_items: stock_input.config(foreground="red")
+	else: stock_input.config(foreground="black")
 	return is_valid
 
 
@@ -40,19 +65,13 @@ def auto_add_space_before_number(event:tk.Event)->None:
 	for digit in range(10): src=src.replace(f"{ITEM_DELIM}{digit}",f"{ITEM_DELIM} {digit}")
 	lengths_input.delete(0,tk.END)
 	lengths_input.insert(0,src)
-	return
 
 
-def restrict_characters_in_stock_entry(src:str)->bool:
-	is_valid = True
-	if src.strip()=="": return True
-	if src[0]==ITEM_DELIM: src=src[1:]
-	if src[-1]==ITEM_DELIM: src=src[:-1]
-	for item in src.split(ITEM_DELIM):
-		if not (re.fullmatch(r"[(),\d]+",item.strip()) or item==' '):
-			is_valid = False
-			break
-	return is_valid
+def auto_add_space_before_left_parenthesis(event:tk.Event)->None:
+	src = lengths_input.get()
+	src=src.replace(f"{ITEM_DELIM}\(",f"{ITEM_DELIM} \(")
+	lengths_input.delete(0,tk.END)
+	lengths_input.insert(0,src)
 
 
 priority_frame = tk.Frame(input_frame)
@@ -73,10 +92,11 @@ priority_button_cost.pack(side=tk.RIGHT)
 vcmd_lengths = (window.register(is_int_list))
 vcmd_stock = (window.register(restrict_characters_in_stock_entry))
 lengths_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd_lengths,'%P'))
-lengths_input.bind("<KeyRelease>",auto_add_space_before_number)
+lengths_input.bind("<FocusOut>",auto_add_space_before_number)
 lengths_input.pack()
 stock_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd_stock,'%P'))
 stock_input.pack()
+stock_input.bind("<FocusOut>",auto_add_space_before_left_parenthesis)
 
 
 order_output = tk.Text(output_frame,width=30)
