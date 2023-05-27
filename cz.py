@@ -12,3 +12,7 @@ WHAT_TO_MINIMIZE = "Co minimalizovat: "
 BOUGHT_STOCK_ITEMS = "Počet koupených kusů"
 COST = "Cena"
 BOTH = "Obojí"
+
+STOCK_INPUT_HELP = "Položku a cenu udávejte jako celá čísla oddělená čárkou v závorce, závorky oddělte středníkem.\nPříklad:\n\n\
+(150,2000); (200,2500)\n\nPokud je někde chyba, zadaný text se zbarví červeně."
+LENGTH_INPUT_HELP = "Délky zadávejte jako celá čísla oddělená středníkem, např.\n\n150; 250; 105; ..."

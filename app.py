@@ -2,6 +2,10 @@ import tkinter as tk
 import pick_and_cut as pc
 from typing import List
 import cz
+import hints
+
+
+INPUT_BACKUP_FILE = "_last_.out"
 
 
 window = tk.Tk()
@@ -46,13 +50,15 @@ def restrict_characters_in_stock_entry(src:str)->bool:
 	if src[0]==";": return False
 	if re.match(r";[\D]*;",src): return False 
 
-	if src[0]==ITEM_DELIM: src=src[1:]
 	if src[-1]==ITEM_DELIM: src=src[:-1]
+
 	for item in src.split(ITEM_DELIM):
 		if not (re.fullmatch(r"[(),\d]+",item.strip()) or re.fullmatch(r"[\w]*",item)):
 			is_valid = False
 			break
 		elif not re.fullmatch(r"\([\d]+[\s]*,[\s]*[\d]+\)",item.strip()) or item==' ':
+			all_valid_stock_items = False
+		elif re.match(r",[\w]\)*",item):
 			all_valid_stock_items = False
 		
 	if not all_valid_stock_items: stock_input.config(foreground="red")
@@ -97,6 +103,10 @@ lengths_input.pack()
 stock_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd_stock,'%P'))
 stock_input.pack()
 stock_input.bind("<FocusOut>",auto_add_space_before_left_parenthesis)
+
+
+hints.createToolTip(lengths_input,text=cz.LENGTH_INPUT_HELP)
+hints.createToolTip(stock_input,text=cz.STOCK_INPUT_HELP)
 
 
 order_output = tk.Text(output_frame,width=30)
@@ -146,11 +156,12 @@ def __redraw_order(order:pc.Ordered_Stock)->None:
 
 def __redraw_cutted_stock(stock:List[pc.Cutted_Stock])->None:
 	stock_str = __underline(cz.HOW_TO_CUT_STOCK)+"\n"
-	for s in stock:
-		stock_str += f"{s.original_length:4} → "
-		for piece in s.pieces[:-1]:
-			stock_str += f"{piece}, "
-		stock_str += f"{s.pieces[-1]}\n"
+	if stock:
+		for s in stock:
+			stock_str += f"{s.original_length:4} → "
+			for piece in s.pieces[:-1]:
+				stock_str += f"{piece}, "
+			stock_str += f"{s.pieces[-1]}\n"
 
 	cutted_stock_output.delete("1.0",tk.END)
 	cutted_stock_output.insert(tk.END,stock_str)
@@ -158,24 +169,38 @@ def __redraw_cutted_stock(stock:List[pc.Cutted_Stock])->None:
 
 def __redraw_combined_lengths(lengths:List[pc.Combined_Length])->None:
 	lengths_str = __underline(cz.HOW_TO_COMBINE_LENGTHS)+"\n"
-	for l in lengths:
-		lengths_str += f"{l.length:4} ← "
-		for piece in l.pieces[:-1]:
-			lengths_str += f"{piece}, "
-		if len(l.pieces)>0:
-			lengths_str += f"{l.pieces[-1]}\n"
+	if lengths:
+		for l in lengths:
+			lengths_str += f"{l.length:4} ← "
+			for piece in l.pieces[:-1]:
+				lengths_str += f"{piece}, "
+			if len(l.pieces)>0:
+				lengths_str += f"{l.pieces[-1]}\n"
 	combined_lengths_output.delete("1.0",tk.END)
 	combined_lengths_output.insert(tk.END,lengths_str)
+
+
+def store_used()->None:
+	with open(INPUT_BACKUP_FILE,'w') as fw:
+		lengths_input_line = lengths_input.get()
+		stock_input_line = stock_input.get()
+		fw.writelines([lengths_input_line,stock_input_line])
+		fw.close()
 
 
 def calculate()->None:
 	lengths = __read_lengths_input()
 	stock = __read_stock_input()
-	if not (lengths and stock): return
-	result = pickandcut_by_priority(lengths,stock)
-	__redraw_order(result.order)
-	__redraw_cutted_stock(result.cutted_stock)
-	__redraw_combined_lengths(result.combined_lengths)
+	store_used()
+	if not (lengths and stock): 
+		__redraw_order(pc.Ordered_Stock(0, {}))
+		__redraw_cutted_stock([])
+		__redraw_combined_lengths([])
+	else:
+		result = pickandcut_by_priority(lengths,stock)
+		__redraw_order(result.order)
+		__redraw_cutted_stock(result.cutted_stock)
+		__redraw_combined_lengths(result.combined_lengths)
 
 
 def pickandcut_by_priority(lengths:List[int],stock:List[pc.Stock]):
@@ -214,4 +239,16 @@ def __save_printed_ouput_to_file()->None:
 print_button = tk.Button(save_frame,text="Uložit",command=__save_printed_ouput_to_file)
 print_button.pack(side=tk.BOTTOM)
 
+
+import os.path
+
+def load_on_start()->None:
+	if not os.path.isfile(INPUT_BACKUP_FILE): return 
+	with open(INPUT_BACKUP_FILE,'r') as fr:
+		lengths_input.insert(0,fr.readline())
+		stock_input.insert(0, fr.readline())
+		fr.close()
+
+
+window.after(50,load_on_start)
 window.mainloop()
