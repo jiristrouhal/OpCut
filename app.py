@@ -34,9 +34,8 @@ def is_int_list(src:str)->bool:
 	if src[0]==ITEM_DELIM: src=src[1:]
 
 	for item in src.split(ITEM_DELIM):
-
 		item = item.strip()
-		if not (re.fullmatch(r"\d+",item.strip()) or re.fullmatch(r"[\w]*",item)):
+		if not (re.fullmatch(r"\d+",item) or item==""):
 			return False
 		elif item!='' and item[0]=='0':
 			return False
@@ -48,15 +47,16 @@ def restrict_characters_in_stock_entry(src:str)->bool:
 	all_valid_stock_items = True
 	if src.strip()=="": return True
 	if src[0]==";": return False
-	if re.match(r";[\D]*;",src): return False 
+	if re.match(r";[\D]*x?;",src): return False 
 
 	if src[-1]==ITEM_DELIM: src=src[:-1]
 
 	for item in src.split(ITEM_DELIM):
-		if not (re.fullmatch(r"[(),\d]+",item.strip()) or re.fullmatch(r"[\w]*",item)):
+		item = item.strip()
+		if not (re.fullmatch(r"[(),\d]+",item) or item==""):
 			is_valid = False
 			break
-		elif not re.fullmatch(r"\([\d]+[\s]*,[\s]*[\d]+\)",item.strip()) or item==' ':
+		elif not (re.fullmatch(r"\([\d]+[\s]*,[\s]*[\d]+\)",item)  or item==""):
 			all_valid_stock_items = False
 		elif re.match(r",[\w]\)*",item):
 			all_valid_stock_items = False
@@ -66,9 +66,10 @@ def restrict_characters_in_stock_entry(src:str)->bool:
 	return is_valid
 
 
-def auto_add_space_before_number(event:tk.Event)->None:
+def auto_format_spaced_between_lengths(event:tk.Event)->None:
 	src = lengths_input.get()
 	for digit in range(10): src=src.replace(f"{ITEM_DELIM}{digit}",f"{ITEM_DELIM} {digit}")
+	src= src.replace("  "," ")
 	lengths_input.delete(0,tk.END)
 	lengths_input.insert(0,src)
 
@@ -98,7 +99,7 @@ priority_button_cost.pack(side=tk.RIGHT)
 vcmd_lengths = (window.register(is_int_list))
 vcmd_stock = (window.register(restrict_characters_in_stock_entry))
 lengths_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd_lengths,'%P'))
-lengths_input.bind("<FocusOut>",auto_add_space_before_number)
+lengths_input.bind("<FocusOut>",auto_format_spaced_between_lengths)
 lengths_input.pack()
 stock_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd_stock,'%P'))
 stock_input.pack()
@@ -182,7 +183,7 @@ def __redraw_combined_lengths(lengths:List[pc.Combined_Length])->None:
 
 def store_used()->None:
 	with open(INPUT_BACKUP_FILE,'w') as fw:
-		lengths_input_line = lengths_input.get()
+		lengths_input_line = lengths_input.get()+'\n'
 		stock_input_line = stock_input.get()
 		fw.writelines([lengths_input_line,stock_input_line])
 		fw.close()
@@ -245,8 +246,12 @@ import os.path
 def load_on_start()->None:
 	if not os.path.isfile(INPUT_BACKUP_FILE): return 
 	with open(INPUT_BACKUP_FILE,'r') as fr:
-		lengths_input.insert(0,fr.readline())
-		stock_input.insert(0, fr.readline())
+		lengths = fr.readline().replace('\n','')
+		stock = fr.readline().replace('\n','')
+		if lengths!="": assert(lengths[-1]!='\n')
+		if stock!="": assert(stock[-1]!='\n')
+		lengths_input.insert(0,lengths)
+		stock_input.insert(0,stock)
 		fr.close()
 
 
