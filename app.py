@@ -220,7 +220,12 @@ calculate_button.pack()
 
 
 import datetime
-def __save_printed_ouput_to_file()->None:
+import tkinter.filedialog as filedialog
+import os.path
+last_dir = '.'
+initial_file_name = cz.RESULTS
+def __save_printed_output_to_file()->None:
+	global last_dir
 	order = order_output.get("1.0",tk.END)
 	cutted_stock = cutted_stock_output.get("1.0",tk.END)
 	combined_lengths = combined_lengths_output.get("1.0",tk.END)
@@ -229,15 +234,23 @@ def __save_printed_ouput_to_file()->None:
 		return
 	now = str(datetime.datetime.now())
 	now = now.replace(":","-")[:-7]
-	filename = f"navrh_kusu_{now}.txt"
-	with open(filename,"w") as f:
-		f.write(order)
-		f.write(cutted_stock)
-		f.write(combined_lengths)
-		f.close()
+	filename = filedialog.asksaveasfilename(
+		title=cz.SAVE_INTO,
+		defaultextension='txt',
+		filetypes=((cz.TEXT_FILE, "txt"),),
+		initialdir=last_dir,
+		initialfile=initial_file_name+' '+str(datetime.datetime.now()).replace(':','-')[:-7]
+		)
+	if filename!='': 
+		last_dir = os.path.dirname(filename)
+		with open(filename,"w") as f:
+			f.write(order)
+			f.write(cutted_stock)
+			f.write(combined_lengths)
+			f.close()
 
 
-print_button = tk.Button(save_frame,text="Uložit",command=__save_printed_ouput_to_file)
+print_button = tk.Button(save_frame,text="Uložit",command=__save_printed_output_to_file)
 print_button.pack(side=tk.BOTTOM)
 
 
