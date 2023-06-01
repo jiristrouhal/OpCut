@@ -11,6 +11,7 @@ INPUT_BACKUP_FILE = "_last_.out"
 window = tk.Tk()
 window.geometry("800x600")
 window.title("BestCut")
+window.iconbitmap(bitmap="./icon.ico")
 
 
 input_frame = tk.Frame(window)
