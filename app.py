@@ -1,8 +1,10 @@
 import tkinter as tk
 import pick_and_cut as pc
 from typing import List
-import cz
 import hints
+
+
+import lng.cz as cz
 
 
 INPUT_BACKUP_FILE = "_last_.out"
