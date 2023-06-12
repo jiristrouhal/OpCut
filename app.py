@@ -4,9 +4,6 @@ from typing import List
 import hints
 
 
-import lng.cz as cz
-
-
 INPUT_BACKUP_FILE = "_last_.out"
 
 
