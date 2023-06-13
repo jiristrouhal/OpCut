@@ -1,5 +1,5 @@
 import tkinter as tk
-import pick_and_cut as pc
+import models.pick_and_cut as pc
 from typing import List
 import hints
 from config import wtext, LANGUAGE_OPTIONS, set_lang, language_change_notification

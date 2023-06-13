@@ -1,6 +1,5 @@
 from typing import List, Dict, Tuple
 import dataclasses
-import copy
 
 
 @dataclasses.dataclass

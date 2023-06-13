@@ -1,6 +1,6 @@
 import unittest
-import cut
-from cut import Length, Combined_Length, Cutted_Raw
+import models.cut as cut
+from models.cut import Length, Combined_Length, Cutted_Raw
 
 
 class Test_Single_Lengths(unittest.TestCase):
