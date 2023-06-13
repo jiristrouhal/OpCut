@@ -26,6 +26,7 @@
 <xs:complexType name="ApplicationFrame">
     <xs:sequence>
         <xs:element name="language_change_notification" type="item"/>
+        <xs:element name="language_change_notification_title" type="item"/>
         <xs:element name="app_title" type="item"/>
     </xs:sequence>
 </xs:complexType>

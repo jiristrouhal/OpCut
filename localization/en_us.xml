@@ -8,7 +8,8 @@
 <Language Id="en_us" Name="English">
 
     <ApplicationFrame>
-        <language_change_notification Text="The language will switch after restart of the program."/>
+        <language_change_notification Text="The language will switch after the restart of the application."/>
+        <language_change_notification_title Text="Switch language"/>
         <app_title Text="OpCut"/>
     </ApplicationFrame>
 

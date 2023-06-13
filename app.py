@@ -3,6 +3,8 @@ import pick_and_cut as pc
 from typing import List
 import hints
 from config import wtext, LANGUAGE_OPTIONS, set_lang, language_change_notification
+import tkinter.messagebox as msgbox
+from functools import partial
 
 
 INPUT_BACKUP_FILE = "_last_.out"
@@ -11,7 +13,26 @@ INPUT_BACKUP_FILE = "_last_.out"
 window = tk.Tk()
 window.geometry("800x600")
 window.title(wtext("app_title","ApplicationFrame"))
-window.iconbitmap(bitmap="./icon.ico")
+window.iconbitmap(bitmap="images/icon.ico")
+
+
+menu = tk.Menu(window)
+window.config(menu=menu)
+lang_menu = tk.Menu(menu,tearoff=False)
+menu.add_cascade(label=wtext("app_language","LanguageMenu"),menu=lang_menu)
+
+def change_language(language_id:str):
+	set_lang(language_id)
+	#to print the message in the selected language, it has to be brough up AFTER setting the language
+	title,message=language_change_notification(language_id)
+	msgbox.showinfo(title=title,message=message)
+
+for language_id in LANGUAGE_OPTIONS:
+    lang_menu.add_command(
+        label=LANGUAGE_OPTIONS[language_id],
+        command=partial(change_language,language_id)
+    )
+
 
 
 input_frame = tk.Frame(window)
@@ -157,7 +178,7 @@ def __redraw_order(order:pc.Ordered_Raw)->None:
 
 
 def __redraw_cutted_stock(stock:List[pc.Cutted_Raw])->None:
-	stock_str = __underline("how_to_cut_raw","report_frame")+"\n"
+	stock_str = __underline(wtext("how_to_cut_raw","report_frame"))+"\n"
 	if stock:
 		for s in stock:
 			stock_str += f"{s.original_length:4} → "
@@ -170,7 +191,7 @@ def __redraw_cutted_stock(stock:List[pc.Cutted_Raw])->None:
 
 
 def __redraw_combined_lengths(lengths:List[pc.Combined_Length])->None:
-	lengths_str = __underline(wtext("how_to_combine_ordered_lengths","report_frame"))+"\n"
+	lengths_str = __underline(wtext("how_to_combine_lengths","report_frame"))+"\n"
 	if lengths:
 		for l in lengths:
 			lengths_str += f"{l.length:4} ← "

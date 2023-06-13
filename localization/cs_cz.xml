@@ -9,6 +9,7 @@
 
     <ApplicationFrame>
         <language_change_notification Text="Změna jazyka se projeví až po restartu programu."/>
+        <language_change_notification_title Text="Změna jazyka"/>
         <app_title Text="OpCut"/>
     </ApplicationFrame>
 
@@ -37,7 +38,7 @@
         <ordered_pieces Text="Objednané kusy"/>
         <pieces Text="ks"/>
         <how_to_cut_raw Text="Jak rozdělit objednané kusy"/>
-        <how_to_combine_lengths Text="Jak zkombinovat požadované délky"/>
+        <how_to_combine_lengths Text="Jak zkombinovat délky"/>
     </report_frame>
 
     <printed_result>

@@ -1,7 +1,6 @@
 import xml.etree.ElementTree as et
-import xmlschema
 import os
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 
 class MissingWordInTranslation(Exception): pass
@@ -72,5 +71,7 @@ def set_lang(language_id:str):
     localization.find("Language").text = language_id
     app_config.write("config.xml")
 
-def language_change_notification(language_id:str)->str:
-    return lang_files[language_id].find("language_change_notification").attrib["Text"]
+def language_change_notification(language_id:str)->Tuple[str,str]:
+    return \
+        lang_files[language_id].find("ApplicationFrame").find("language_change_notification_title").attrib["Text"],\
+        lang_files[language_id].find("ApplicationFrame").find("language_change_notification").attrib["Text"]
