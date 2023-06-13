@@ -17,11 +17,36 @@
     </LanguageMenu>
 
     <priority_frame>
-        <what_to_optimize Text="Optimalizovat"/>
+        <what_to_optimize Text="Co optimalizovat: "/>
         <both Text="Obojí"/>
         <cut_count Text="Počet řezů"/>
         <cost Text="Celková cena"/>
-        
     </priority_frame>
+
+    <hints>
+        <lengths_input_help Text="Délky zadávejte jako celá čísla oddělená středníkem, např.&#xA;&#xA;150; 250; 105; ..."/>
+        <raw_input_help Text="Položku a cenu udávejte jako celá čísla oddělená čárkou v závorce, závorky oddělte středníkem.&#xA;Příklad:&#xA;&#xA;
+(150,2000); (200,2500)&#xA;&#xA;Pokud je někde chyba, zadaný text se zbarví červeně."/>
+    </hints>
+
+    <calculate Text="Vypočítej"/>
+
+    <report_frame>
+        <order Text="Objednávka"/>
+        <total_cost Text="Cena celkem"/>
+        <ordered_pieces Text="Objednané kusy"/>
+        <pieces Text="ks"/>
+        <how_to_cut_raw Text="Jak rozdělit objednané kusy"/>
+        <how_to_combine_lengths Text="Jak zkombinovat požadované délky"/>
+    </report_frame>
+
+    <printed_result>
+        <result Text="Výsledek"/>
+        <save_into Text="Uložit do ..."/>
+        <text_file Text="Textový soubor"/>
+        <save Text="Uložit"/>
+    </printed_result>
+
+
 
 </Language>

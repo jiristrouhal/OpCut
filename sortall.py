@@ -10,7 +10,7 @@ class Length:
 
 
 @dataclasses.dataclass
-class Ordered_Stock:
+class Ordered_Raw:
 	length:int
 	count:int
 
@@ -27,7 +27,7 @@ class Ordered_Stock:
 		return "Length: "+str(self.length)+"; count: "+str(self.count)
 	
 
-class NotEnoughStockItems(Exception): pass
+class NotEnoughRawItems(Exception): pass
 		
 
 def mincutsort(lengths_list:List[int],stock_dict:Dict[int,int])->Tuple[List[Length],List[int]]:
@@ -36,7 +36,7 @@ def mincutsort(lengths_list:List[int],stock_dict:Dict[int,int])->Tuple[List[Leng
 	__raise_if_not_enough_stock(sum(lengths_list),stock_dict)
 
 	lengths:List[Length] = __append_original_list_ids_to_lengths(lengths_list)
-	stock:List[Ordered_Stock] = __convert_stock_dict_to_ordered_stock_objects(stock_dict)
+	stock:List[Ordered_Raw] = __convert_stock_dict_to_ordered_stock_objects(stock_dict)
 
 	already_ok_stock, remaining_lengths, remaining_stock = __pick_stock_that_does_not_to_be_cut(lengths,stock)
 
@@ -52,24 +52,24 @@ def mincutsort(lengths_list:List[int],stock_dict:Dict[int,int])->Tuple[List[Leng
 def __raise_if_not_enough_stock(total_length, stock:Dict[int,int]):
 	stock_length_sum = 0
 	for length,count in stock.items(): stock_length_sum += length*count
-	if stock_length_sum<total_length: raise NotEnoughStockItems
+	if stock_length_sum<total_length: raise NotEnoughRawItems
 	
 
 def __append_original_list_ids_to_lengths(lengths:List[int])->List[Length]:
 	return [Length(lengths[i],i) for i in range(len(lengths))]
 
 
-def __convert_stock_dict_to_ordered_stock_objects(stock:Dict[int,int])->List[Ordered_Stock]:
-	ordered_stock:List[Ordered_Stock] = list()
+def __convert_stock_dict_to_ordered_stock_objects(stock:Dict[int,int])->List[Ordered_Raw]:
+	ordered_stock:List[Ordered_Raw] = list()
 	for length,count in stock.items():
-		ordered_stock.append(Ordered_Stock(length,count))
+		ordered_stock.append(Ordered_Raw(length,count))
 	return ordered_stock
 
 
 def __pick_stock_that_does_not_to_be_cut(
 	lengths:List[Length],
-	stock:List[Ordered_Stock]
-	)->Tuple[List[Length],List[Length],List[Ordered_Stock]]:
+	stock:List[Ordered_Raw]
+	)->Tuple[List[Length],List[Length],List[Ordered_Raw]]:
 
 	matches:List[Length] = list()
 	for stock_item in stock:
@@ -83,7 +83,7 @@ def __pick_stock_that_does_not_to_be_cut(
 _memo:Dict[str,Tuple[int,int,List[Length],List[int]]] = dict()
 def _sort_remaining_stock_and_lengths(
 	lengths:List[Length],
-	stock:List[Ordered_Stock]
+	stock:List[Ordered_Raw]
 	)->Tuple[List[Length],List[int]]:
 
 	sorted_stock:List[int] = list()
@@ -107,7 +107,7 @@ def __maximize_matching_ends(
 	l_sum:int, 
 	s_sum:int, 
 	l:List[Length], 
-	s:List[Ordered_Stock]
+	s:List[Ordered_Raw]
 	)->Tuple[int,int,List[Length],List[int]]:
 
 	if s_sum==0: return 0,0,l.copy(),[]
@@ -160,14 +160,14 @@ def __maximize_matching_ends(
 	return _memo[label]
 
 
-def _unpack_remaining_stock(s:List[Ordered_Stock])->List[int]:
+def _unpack_remaining_stock(s:List[Ordered_Raw])->List[int]:
 	s_list:List[int] = []
 	for si in s:
 		s_list += [si.length]*si.count
 	return s_list
 
 
-def __sum_ordered_stock_lengths(stock:List[Ordered_Stock]):
+def __sum_ordered_stock_lengths(stock:List[Ordered_Raw]):
 	stock_length_sum = 0
 	for item in stock: stock_length_sum += item.count*item.length
 	return stock_length_sum

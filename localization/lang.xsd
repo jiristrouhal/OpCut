@@ -11,6 +11,10 @@
             <xs:element name="ApplicationFrame" type="ApplicationFrame"/>
             <xs:element name="LanguageMenu" type="LanguageMenu"/>
             <xs:element name="priority_frame" type="PriorityFrame"/>
+            <xs:element name="hints" type="Hints"/>
+            <xs:element name="calculate" type="item"/>
+            <xs:element name="report_frame" type="ReportFrame"/>
+            <xs:element name="printed_result" type="PrintedResult"/>
 
         </xs:sequence>
         <xs:attribute name="Id" type="xs:string"/>
@@ -40,6 +44,36 @@
         <xs:element name="both" type="item"/>
         <xs:element name="cut_count" type="item"/>
         <xs:element name="cost" type="item"/>
+    </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="Hints">
+    <xs:sequence>
+        <xs:element name="lengths_input_help" type="item"/>
+        <xs:element name="raw_input_help" type="item"/>
+    </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="ReportFrame">
+    <xs:sequence>
+        <xs:element name="order" type="item"/>
+        <xs:element name="total_cost" type="item"/>
+        <xs:element name="ordered_pieces" type="item"/>
+        <xs:element name="pieces" type="item"/>
+        <xs:element name="how_to_cut_raw" type="item"/>
+        <xs:element name="how_to_combine_lengths" type="item"/>
+    </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="PrintedResult">
+    <xs:sequence>
+        <xs:element name="result" type="item"/>
+        <xs:element name="save_into" type="item"/>
+        <xs:element name="text_file" type="item"/>
+        <xs:element name="save" type="item"/>
     </xs:sequence>
 </xs:complexType>
 

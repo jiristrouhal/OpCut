@@ -1,6 +1,6 @@
 import unittest
 import cut
-from cut import Length, Cutted_Length, Cutted_Stock
+from cut import Length, Combined_Length, Cutted_Raw
 
 
 class Test_Single_Lengths(unittest.TestCase):
@@ -11,11 +11,11 @@ class Test_Single_Lengths(unittest.TestCase):
 		cutted_lengths, cutted_stock = cut.cut(lengths,stock)
 		self.assertListEqual(
 			cutted_lengths,
-			[Cutted_Length(Length(100),[100])]
+			[Combined_Length(Length(100),[100])]
 		)
 		self.assertListEqual(
 			cutted_stock,
-			[Cutted_Stock(100,[100])]
+			[Cutted_Raw(100,[100])]
 		)
 	
 	def test_stock_of_twice_length_is_cutted_in_half(self):
@@ -24,11 +24,11 @@ class Test_Single_Lengths(unittest.TestCase):
 		cutted_lengths, cutted_stock = cut.cut(lengths,stock)
 		self.assertListEqual(
 			cutted_lengths,
-			[Cutted_Length(Length(100,0),[100])]
+			[Combined_Length(Length(100,0),[100])]
 		)
 		self.assertListEqual(
 			cutted_stock,
-			[Cutted_Stock(200,[100,100])]
+			[Cutted_Raw(200,[100,100])]
 		)
 
 
@@ -40,14 +40,14 @@ class Test_Two_Lengths(unittest.TestCase):
 		cutted_lengths, cutted_stock = cut.cut(lengths,stock)
 		self.assertListEqual(
 			cutted_lengths,
-			[Cutted_Length(Length(150),[150]), 
-    		Cutted_Length(Length(150),[150])]
+			[Combined_Length(Length(150),[150]), 
+    		Combined_Length(Length(150),[150])]
 		)
 		self.assertListEqual(
 			cutted_stock,
 			[
-				Cutted_Stock(150,[150]),
-				Cutted_Stock(150,[150])
+				Cutted_Raw(150,[150]),
+				Cutted_Raw(150,[150])
 			]
 		)
 	
@@ -57,14 +57,14 @@ class Test_Two_Lengths(unittest.TestCase):
 		cutted_lengths, cutted_stock = cut.cut(lengths,stock)
 		self.assertListEqual(
 			cutted_lengths,
-			[Cutted_Length(Length(200),[150,50]), 
-    		Cutted_Length(Length(100),[100])]
+			[Combined_Length(Length(200),[150,50]), 
+    		Combined_Length(Length(100),[100])]
 		)
 		self.assertListEqual(
 			cutted_stock,
 			[
-				Cutted_Stock(150,[150]),
-				Cutted_Stock(150,[50,100])
+				Cutted_Raw(150,[150]),
+				Cutted_Raw(150,[50,100])
 			]
 		)
 

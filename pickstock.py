@@ -9,14 +9,14 @@ COST_AND_COUNT = 'cost and count'
 
 
 @dataclasses.dataclass(frozen=True)
-class Stock:
+class Raw:
 	length:int
 	price:int
-	def __new__(cls,length:int,price:int)->Stock:
+	def __new__(cls,length:int,price:int)->Raw:
 		if length<=0:
-			raise ValueError(f"Stock can have only positive length (curent value: {length}).")
+			raise ValueError(f"Raw can have only positive length (curent value: {length}).")
 		if price<=0:
-			raise ValueError(f"Stock can have only positive price (current value: {price}).")
+			raise ValueError(f"Raw can have only positive price (current value: {price}).")
 		return super().__new__(cls)
 
 
@@ -41,7 +41,7 @@ class Picked:
 	def __repr__(self)->str:
 		return f"Picked(cost={self.cost}, items={self.items}, total_length={self.total_length})"
 
-	def add_stock(self, stock:Stock)->None: 
+	def add_stock(self, stock:Raw)->None: 
 		self.cost += stock.price
 		if stock.length not in self.items: 
 			self.items[stock.length] = 1
@@ -56,7 +56,7 @@ class Picked:
 
 _priority:str = ""
 _memo:Dict[int,Picked] = dict()
-def ecopick(lengths:List[int],stock:List[Stock],priority:Literal['cost','count','cost and count']='cost')->Picked:
+def ecopick(lengths:List[int],stock:List[Raw],priority:Literal['cost','count','cost and count']='cost')->Picked:
 	global _memo, _priority
 
 	_priority = priority
@@ -86,7 +86,7 @@ def __raise_exception_if_some_nonpositive_length(lengths:List[int]):
 		if length<=0: raise ValueError(f"Specify positive lengths (found length {length}).")
 
 
-def __pick_for_sublength(sublength:int, stock:List[Stock])->Picked:
+def __pick_for_sublength(sublength:int, stock:List[Raw])->Picked:
 	if sublength<=0: return __pick_nothing()
 
 	global _memo

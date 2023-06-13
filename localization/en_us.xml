@@ -23,4 +23,29 @@
         <cost Text="Total cost"/>
     </priority_frame>
 
+    <hints>
+        <lengths_input_help Text="Insert integer lengths separated with a semicolon ';', for example&#xA;&#xA;150; 250; 105; ..."/>
+        <raw_input_help Text="Insert raw piece and its price using integers separated with a comma ',' in parentheses '()'. These parentheses must be separated with a semicolon ';'.&#xA;
+        For example:&#xA;&#xA;(150,2000); (200,2500)&#xA;&#xA;
+        The text will appear red in case of any error."/>
+    </hints>
+
+    <calculate Text="Calculate"/>
+
+    <report_frame>
+        <order Text="Order"/>
+        <total_cost Text="Total cost"/>
+        <ordered_pieces Text="Ordered pieces"/>
+        <pieces Text="pc"/>
+        <how_to_cut_raw Text="How to cut raw pieces"/>
+        <how_to_combine_lengths Text="How to combine lengths"/>
+    </report_frame>
+
+    <printed_result>
+        <result Text="Result"/>
+        <save_into Text="Save into ..."/>
+        <text_file Text="Text file"/>
+        <save Text="Save"/>
+    </printed_result>
+
 </Language>

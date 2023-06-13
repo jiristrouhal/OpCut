@@ -4,19 +4,19 @@ import dataclasses
 
 
 @dataclasses.dataclass
-class Stock:
+class Raw:
 	length:int
 	price:int
 
 
 @dataclasses.dataclass
-class Ordered_Stock:
+class Ordered_Raw:
 	total_price:int
 	items:Dict[int,int]
 
 
 @dataclasses.dataclass
-class Cutted_Stock:
+class Cutted_Raw:
 	original_length:int
 	pieces:List[int]
 
@@ -29,13 +29,13 @@ class Combined_Length:
 
 @dataclasses.dataclass
 class Picked_And_Cutted:
-	order:Ordered_Stock
+	order:Ordered_Raw
 	combined_lengths:List[Combined_Length]
-	cutted_stock:List[Cutted_Stock]
+	cutted_stock:List[Cutted_Raw]
 
 
-def pickandcut(lengths:List[int],stock:List[Stock], priority:Literal['cost','count','cost and count']='cost')->Picked_And_Cutted:
-	prepared_stock = [pickstock.Stock(s.length,s.price) for s in stock]
+def pickandcut(lengths:List[int],stock:List[Raw], priority:Literal['cost','count','cost and count']='cost')->Picked_And_Cutted:
+	prepared_stock = [pickstock.Raw(s.length,s.price) for s in stock]
 	raw_ordered_stock = pickstock.ecopick(lengths, prepared_stock, priority)
 	sorted_lengths, sorted_stock = sortall.mincutsort(lengths,raw_ordered_stock.items,)
 	prepared_sorted_lengths = [cut.Length(l.length,l.id) for l in sorted_lengths]
@@ -45,12 +45,12 @@ def pickandcut(lengths:List[int],stock:List[Stock], priority:Literal['cost','cou
 	assert(sum([sum(l.pieces) for l in raw_combined_lengths]) <= sum([sum(s.pieces) for s in raw_cutted_stock]))
 
 	combined_lengths:List[Combined_Length] = list()
-	cutted_stock:List[Cutted_Stock] = list()
+	cutted_stock:List[Cutted_Raw] = list()
 	for l in raw_combined_lengths:
 		combined_lengths.append(Combined_Length(l.original.length, l.pieces))
 	for s in raw_cutted_stock:
-		cutted_stock.append(Cutted_Stock(s.original, s.pieces))
-	ordered_stock = Ordered_Stock(raw_ordered_stock.cost,raw_ordered_stock.items)
+		cutted_stock.append(Cutted_Raw(s.original, s.pieces))
+	ordered_stock = Ordered_Raw(raw_ordered_stock.cost,raw_ordered_stock.items)
 
 	assert(sum([sum(l.pieces) for l in raw_combined_lengths]) == sum([sum(l.pieces) for l in combined_lengths]))
 

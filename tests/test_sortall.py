@@ -1,6 +1,6 @@
 import unittest
 import sortall
-from sortall import Length, NotEnoughStockItems, Ordered_Stock
+from sortall import Length, NotEnoughRawItems, Ordered_Raw
 from typing import List, Dict
 
 
@@ -15,7 +15,7 @@ class Test_Single_Length(unittest.TestCase):
 		self.assertListEqual(sorted_stock,[100])
 
 	def test_sum_of_stock_lengths_raises_exception(self)->None:
-		with self.assertRaises(NotEnoughStockItems):
+		with self.assertRaises(NotEnoughRawItems):
 			lengths:List[int] = [100]
 			stock:Dict[int,int] = {}
 			sortall.mincutsort(lengths,stock)
@@ -62,44 +62,44 @@ class Test_Multiple_Lengths(unittest.TestCase):
 		self.assertListEqual(sorted_stock, [110,90])
 
 
-class Test_Sorting_Nonmatchinch_Lengths_And_Stock(unittest.TestCase):
+class Test_Sorting_Nonmatchinch_Lengths_And_Raw(unittest.TestCase):
 
 	def test_single_length_and_stock_are_not_sorted(self):
 		lengths = [Length(101,0)]
-		stock = [Ordered_Stock(120,1)]
+		stock = [Ordered_Raw(120,1)]
 		sorted_lengths, sorted_stock = sortall._sort_remaining_stock_and_lengths(lengths,stock)
 		self.assertListEqual(sorted_lengths, [Length(101,0)])
 		self.assertListEqual(sorted_stock,[120])
 
 	def test_two_lengths_with_single_stock_are_not_sorted(self):
 		lengths = [Length(50,0), Length(70,1)]
-		stock = [Ordered_Stock(130,1)]
+		stock = [Ordered_Raw(130,1)]
 		sorted_lengths, sorted_stock = sortall._sort_remaining_stock_and_lengths(lengths,stock)
 		self.assertListEqual(sorted_lengths, [Length(50,0), Length(70,1)])
 		self.assertListEqual(sorted_stock,[130])
 
 	def test_two_lengths_with_two_stock_are_sorted_to_maximize_distance_between_ends(self):
 		lengths = [Length(50,0), Length(70,1)]
-		stock = [Ordered_Stock(65,1), Ordered_Stock(55,1)]
+		stock = [Ordered_Raw(65,1), Ordered_Raw(55,1)]
 		sorted_lengths, sorted_stock = sortall._sort_remaining_stock_and_lengths(lengths,stock)
 		self.assertListEqual(sorted_lengths, [Length(50,0), Length(70,1)])
 		self.assertListEqual(sorted_stock,[65,55])
 
 
-class Test_Unpacking_Ordered_Stock_To_Stock_Length_List(unittest.TestCase):
+class Test_Unpacking_Ordered_Raw_To_Raw_Length_List(unittest.TestCase):
 
 	def test_unpack_single_type_stock(self)->None:
-		stock = [Ordered_Stock(100,2)]
+		stock = [Ordered_Raw(100,2)]
 		s_int = sortall._unpack_remaining_stock(stock)
 		self.assertListEqual(s_int,[100,100])
 
 	def test_unpack_two_types_of_stock(self)->None:
-		stock = [Ordered_Stock(100,2), Ordered_Stock(200,1)]
+		stock = [Ordered_Raw(100,2), Ordered_Raw(200,1)]
 		s_int = sortall._unpack_remaining_stock(stock)
 		self.assertListEqual(s_int,[100,100,200])
 
 	def test_upacking_stock_of_zero_count_leads_to_empty_list(self)->None:
-		stock = [Ordered_Stock(100,0)]
+		stock = [Ordered_Raw(100,0)]
 		s_int = sortall._unpack_remaining_stock(stock)
 		self.assertListEqual(s_int,[])
 

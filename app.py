@@ -10,7 +10,7 @@ INPUT_BACKUP_FILE = "_last_.out"
 
 window = tk.Tk()
 window.geometry("800x600")
-window.title(wtext("app_title"))
+window.title(wtext("app_title","ApplicationFrame"))
 window.iconbitmap(bitmap="./icon.ico")
 
 
@@ -107,8 +107,8 @@ stock_input.pack()
 stock_input.bind("<FocusOut>",auto_add_space_before_left_parenthesis)
 
 
-hints.createToolTip(lengths_input,text=cz.LENGTH_INPUT_HELP)
-hints.createToolTip(stock_input,text=cz.STOCK_INPUT_HELP)
+hints.createToolTip(lengths_input,text=wtext("lengths_input_help","hints"))
+hints.createToolTip(stock_input,text=wtext("raw_input_help","hints"))
 
 
 order_output = tk.Text(output_frame,width=30)
@@ -134,30 +134,30 @@ def __read_lengths_input()->List[int]:
 	return lengths
 
 
-def __read_stock_input()->List[pc.Stock]:
+def __read_stock_input()->List[pc.Raw]:
 	stock_str:List[str] = stock_input.get().split(ITEM_DELIM)
 	if len(stock_str)==0: return []
-	stock:List[pc.Stock] = list()
+	stock:List[pc.Raw] = list()
 	for s in stock_str:
 		if s.strip()=='': continue
 		s=s.replace("(","").replace(")","").strip()
 		if s.count(",") != 1: return []
 		length, price = tuple(s.split(","))
-		stock.append(pc.Stock(int(length),int(price)))
+		stock.append(pc.Raw(int(length),int(price)))
 	return stock
 
 
-def __redraw_order(order:pc.Ordered_Stock)->None:
-	order_str = __underline(cz.ORDER)+"\n"
-	order_str += cz.TOTAL_COST+":"+f" {order.total_price}\n\n" + cz.ITEMS+":\n"
+def __redraw_order(order:pc.Ordered_Raw)->None:
+	order_str = __underline(wtext("order","report_frame"))+"\n"
+	order_str += wtext("total_cost","report_frame")+":"+f" {order.total_price}\n\n" + wtext("ordered_pieces","report_frame")+":\n"
 	for length,count in order.items.items():
-		order_str += f"\t{length:5} ...\t{count:3} {cz.PIECES}\n"
+		order_str += f"\t{length:5} ...\t{count:3} {wtext('pieces','report_frame')}\n"
 	order_output.delete("1.0",tk.END)
 	order_output.insert(tk.END,order_str)
 
 
-def __redraw_cutted_stock(stock:List[pc.Cutted_Stock])->None:
-	stock_str = __underline(cz.HOW_TO_CUT_STOCK)+"\n"
+def __redraw_cutted_stock(stock:List[pc.Cutted_Raw])->None:
+	stock_str = __underline("how_to_cut_raw","report_frame")+"\n"
 	if stock:
 		for s in stock:
 			stock_str += f"{s.original_length:4} → "
@@ -170,7 +170,7 @@ def __redraw_cutted_stock(stock:List[pc.Cutted_Stock])->None:
 
 
 def __redraw_combined_lengths(lengths:List[pc.Combined_Length])->None:
-	lengths_str = __underline(cz.HOW_TO_COMBINE_LENGTHS)+"\n"
+	lengths_str = __underline(wtext("how_to_combine_ordered_lengths","report_frame"))+"\n"
 	if lengths:
 		for l in lengths:
 			lengths_str += f"{l.length:4} ← "
@@ -195,7 +195,7 @@ def calculate()->None:
 	stock = __read_stock_input()
 	store_used()
 	if not (lengths and stock): 
-		__redraw_order(pc.Ordered_Stock(0, {}))
+		__redraw_order(pc.Ordered_Raw(0, {}))
 		__redraw_cutted_stock([])
 		__redraw_combined_lengths([])
 	else:
@@ -205,7 +205,7 @@ def calculate()->None:
 		__redraw_combined_lengths(result.combined_lengths)
 
 
-def pickandcut_by_priority(lengths:List[int],stock:List[pc.Stock]):
+def pickandcut_by_priority(lengths:List[int],stock:List[pc.Raw]):
 	global priority_var
 	match priority_var.get():
 		case pc.pickstock.COST:
@@ -216,7 +216,7 @@ def pickandcut_by_priority(lengths:List[int],stock:List[pc.Stock]):
 			return pc.pickandcut(lengths,stock,'cost and count')
 
 
-calculate_button = tk.Button(controls_frame,text=cz.CALCULATE,command=calculate)
+calculate_button = tk.Button(controls_frame,text=wtext("calculate"),command=calculate)
 calculate_button.pack()
 
 
@@ -224,7 +224,7 @@ import datetime
 import tkinter.filedialog as filedialog
 import os.path
 last_dir = '.'
-initial_file_name = cz.RESULTS
+initial_file_name = wtext("result","printed_result")
 def __save_printed_output_to_file()->None:
 	global last_dir
 	order = order_output.get("1.0",tk.END)
@@ -236,9 +236,9 @@ def __save_printed_output_to_file()->None:
 	now = str(datetime.datetime.now())
 	now = now.replace(":","-")[:-7]
 	filename = filedialog.asksaveasfilename(
-		title=cz.SAVE_INTO,
+		title=wtext("save_into","printed_result"),
 		defaultextension='txt',
-		filetypes=((cz.TEXT_FILE, "txt"),),
+		filetypes=((wtext("text_file","printed_result"), "txt"),),
 		initialdir=last_dir,
 		initialfile=initial_file_name+' '+str(datetime.datetime.now()).replace(':','-')[:-7]
 		)
@@ -251,7 +251,7 @@ def __save_printed_output_to_file()->None:
 			f.close()
 
 
-print_button = tk.Button(save_frame,text="Uložit",command=__save_printed_output_to_file)
+print_button = tk.Button(save_frame,text=wtext("save","printed_result"),command=__save_printed_output_to_file)
 print_button.pack(side=tk.BOTTOM)
 
 

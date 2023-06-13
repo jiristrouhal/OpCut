@@ -15,23 +15,23 @@ class Length:
 
 
 @dataclasses.dataclass
-class Cutted_Length:
+class Combined_Length:
 	original:Length
 	pieces:List[int]
 
 
 @dataclasses.dataclass
-class Cutted_Stock:
+class Cutted_Raw:
 	original:int
 	pieces:List[int]
 
 
-def cut(lengths:List[Length],stock:List[int])->Tuple[List[Cutted_Length],List[Cutted_Stock]]:
-	cutted_lengths:List[Cutted_Length] = list()
-	cutted_stock:List[Cutted_Stock] = list()
+def cut(lengths:List[Length],stock:List[int])->Tuple[List[Combined_Length],List[Cutted_Raw]]:
+	cutted_lengths:List[Combined_Length] = list()
+	cutted_stock:List[Cutted_Raw] = list()
 
-	for l in lengths: cutted_lengths.append(Cutted_Length(l,[]))
-	for s in stock: cutted_stock.append(Cutted_Stock(s,[]))
+	for l in lengths: cutted_lengths.append(Combined_Length(l,[]))
+	for s in stock: cutted_stock.append(Cutted_Raw(s,[]))
 
 	for l in lengths: assert(l.length>0)
 	for s in stock: assert(s>0)
