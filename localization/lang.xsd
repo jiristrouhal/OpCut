@@ -1,0 +1,47 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+
+<xs:complexType name="item"> <xs:attribute name="Text" type="xs:string"/> </xs:complexType>
+
+
+<xs:element name="Language">
+    <xs:complexType>
+        <xs:sequence>
+
+            <xs:element name="ApplicationFrame" type="ApplicationFrame"/>
+            <xs:element name="LanguageMenu" type="LanguageMenu"/>
+            <xs:element name="priority_frame" type="PriorityFrame"/>
+
+        </xs:sequence>
+        <xs:attribute name="Id" type="xs:string"/>
+        <xs:attribute name="Name" type="xs:string"/>
+    </xs:complexType>
+</xs:element>
+
+
+<xs:complexType name="ApplicationFrame">
+    <xs:sequence>
+        <xs:element name="language_change_notification" type="item"/>
+        <xs:element name="app_title" type="item"/>
+    </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="LanguageMenu">
+    <xs:sequence>
+        <xs:element name="app_language" type="item"/>
+    </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="PriorityFrame">
+    <xs:sequence>
+        <xs:element name="what_to_optimize" type="item"/>
+        <xs:element name="both" type="item"/>
+        <xs:element name="cut_count" type="item"/>
+        <xs:element name="cost" type="item"/>
+    </xs:sequence>
+</xs:complexType>
+
+
+</xs:schema>

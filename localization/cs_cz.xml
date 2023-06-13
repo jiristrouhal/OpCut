@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model 
+    href="lang.xsd" 
+    type="application/xml" 
+    schematypens="http://www.w3.org/2001/XMLSchema"
+?>
+
+<Language Id="cs_cz" Name="Čeština">
+
+    <ApplicationFrame>
+        <language_change_notification Text="Změna jazyka se projeví až po restartu programu."/>
+        <app_title Text="OpCut"/>
+    </ApplicationFrame>
+
+    <LanguageMenu>
+        <app_language Text="Jazyk"/>
+    </LanguageMenu>
+
+    <priority_frame>
+        <what_to_optimize Text="Optimalizovat"/>
+        <both Text="Obojí"/>
+        <cut_count Text="Počet řezů"/>
+        <cost Text="Celková cena"/>
+        
+    </priority_frame>
+
+</Language>

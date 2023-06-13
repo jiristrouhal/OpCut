@@ -2,6 +2,7 @@ import tkinter as tk
 import pick_and_cut as pc
 from typing import List
 import hints
+from config import wtext, LANGUAGE_OPTIONS, set_lang, language_change_notification
 
 
 INPUT_BACKUP_FILE = "_last_.out"
@@ -9,7 +10,7 @@ INPUT_BACKUP_FILE = "_last_.out"
 
 window = tk.Tk()
 window.geometry("800x600")
-window.title("BestCut")
+window.title(wtext("app_title"))
 window.iconbitmap(bitmap="./icon.ico")
 
 
@@ -83,16 +84,16 @@ def auto_add_space_before_left_parenthesis(event:tk.Event)->None:
 
 priority_frame = tk.Frame(input_frame)
 priority_frame.pack(side=tk.BOTTOM)
-priority_label = tk.Label(priority_frame, text=cz.WHAT_TO_MINIMIZE)
+priority_label = tk.Label(priority_frame, text=wtext("what_to_optimize","priority_frame"))
 priority_label.pack(side=tk.LEFT)
 
 
 priority_var = tk.StringVar(priority_frame, pc.pickstock.COST)
-priority_button_both = tk.Radiobutton(priority_frame, text=cz.BOTH, variable=priority_var, value=pc.pickstock.COST_AND_COUNT)
+priority_button_both = tk.Radiobutton(priority_frame, text=wtext("both","priority_frame"), variable=priority_var, value=pc.pickstock.COST_AND_COUNT)
 priority_button_both.pack(side=tk.RIGHT)
-priority_button_items = tk.Radiobutton(priority_frame, text=cz.BOUGHT_STOCK_ITEMS, variable=priority_var, value=pc.pickstock.COUNT)
+priority_button_items = tk.Radiobutton(priority_frame, text=wtext("cut_count","priority_frame"), variable=priority_var, value=pc.pickstock.COUNT)
 priority_button_items.pack(side=tk.RIGHT)
-priority_button_cost = tk.Radiobutton(priority_frame, text=cz.COST, variable=priority_var, value=pc.pickstock.COST)
+priority_button_cost = tk.Radiobutton(priority_frame, text=wtext("cost","priority_frame"), variable=priority_var, value=pc.pickstock.COST)
 priority_button_cost.pack(side=tk.RIGHT)
 
 
