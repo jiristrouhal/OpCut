@@ -1,5 +1,5 @@
 import unittest
-import pick_and_cut
+import models.pick_and_cut as pick_and_cut
 from pick_and_cut import Raw, Combined_Length, Cutted_Raw
 
 

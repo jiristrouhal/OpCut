@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(1,'D:/Users/MznSt/Desktop/BestCut/models')
+
 import unittest
 import sortall
 from sortall import Length, NotEnoughRawItems, Ordered_Raw

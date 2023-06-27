@@ -1,5 +1,5 @@
 <Root>
     <Localization LangDirectory="./localization/">
-        <Language>en_us</Language>
+        <Language>cs_cz</Language>
     </Localization>
 </Root>

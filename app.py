@@ -109,12 +109,12 @@ priority_label = tk.Label(priority_frame, text=wtext("what_to_optimize","priorit
 priority_label.pack(side=tk.LEFT)
 
 
-priority_var = tk.StringVar(priority_frame, pc.pickstock.COST)
-priority_button_both = tk.Radiobutton(priority_frame, text=wtext("both","priority_frame"), variable=priority_var, value=pc.pickstock.COST_AND_COUNT)
+priority_var = tk.StringVar(priority_frame, pc.pickraw.COST)
+priority_button_both = tk.Radiobutton(priority_frame, text=wtext("both","priority_frame"), variable=priority_var, value=pc.pickraw.COST_AND_COUNT)
 priority_button_both.pack(side=tk.RIGHT)
-priority_button_items = tk.Radiobutton(priority_frame, text=wtext("cut_count","priority_frame"), variable=priority_var, value=pc.pickstock.COUNT)
+priority_button_items = tk.Radiobutton(priority_frame, text=wtext("cut_count","priority_frame"), variable=priority_var, value=pc.pickraw.COUNT)
 priority_button_items.pack(side=tk.RIGHT)
-priority_button_cost = tk.Radiobutton(priority_frame, text=wtext("cost","priority_frame"), variable=priority_var, value=pc.pickstock.COST)
+priority_button_cost = tk.Radiobutton(priority_frame, text=wtext("cost","priority_frame"), variable=priority_var, value=pc.pickraw.COST)
 priority_button_cost.pack(side=tk.RIGHT)
 
 
@@ -229,11 +229,11 @@ def calculate()->None:
 def pickandcut_by_priority(lengths:List[int],stock:List[pc.Raw]):
 	global priority_var
 	match priority_var.get():
-		case pc.pickstock.COST:
+		case pc.pickraw.COST:
 			return pc.pickandcut(lengths,stock,'cost')
-		case pc.pickstock.COUNT:
+		case pc.pickraw.COUNT:
 			return pc.pickandcut(lengths,stock,'count')
-		case pc.pickstock.COST_AND_COUNT:
+		case pc.pickraw.COST_AND_COUNT:
 			return pc.pickandcut(lengths,stock,'cost and count')
 
 

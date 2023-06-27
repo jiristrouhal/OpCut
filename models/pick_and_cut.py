@@ -1,4 +1,4 @@
-import models.pickstock as pickstock
+import models.pickraw as pickraw
 import models.sortall as sortall
 import models.cut as cut
 from typing import List, Dict, Literal
@@ -37,8 +37,8 @@ class Picked_And_Cutted:
 
 
 def pickandcut(lengths:List[int],stock:List[Raw], priority:Literal['cost','count','cost and count']='cost')->Picked_And_Cutted:
-	prepared_stock = [pickstock.Raw(s.length,s.price) for s in stock]
-	raw_ordered_stock = pickstock.ecopick(lengths, prepared_stock, priority)
+	prepared_stock = [pickraw.Raw(s.length,s.price) for s in stock]
+	raw_ordered_stock = pickraw.ecopick(lengths, prepared_stock, priority)
 	sorted_lengths, sorted_stock = sortall.mincutsort(lengths,raw_ordered_stock.items,)
 	prepared_sorted_lengths = [cut.Length(l.length,l.id) for l in sorted_lengths]
 	raw_combined_lengths, raw_cutted_stock = cut.cut(prepared_sorted_lengths,sorted_stock)
