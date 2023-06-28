@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as et
 import os
 from typing import Dict, List, Tuple
+import dataclasses
 
 
 class MissingWordInTranslation(Exception): pass
@@ -61,6 +62,21 @@ def wtext(item_id:str,*parents:str)->str:
         f"The string {item_id} is not defined in any language file in 'localization'."
     )
     return parent.find(item_id).attrib["Text"]
+
+
+@dataclasses.dataclass(frozen=True)
+class WLink: 
+    label:str
+    link:str
+
+def wlink(item_id:str,*parents:str)->WLink:
+    parent = SESSION_LANGUAGE
+    for p in parents: parent = parent.find(p)
+    item = parent.find(item_id)
+    if item==None: raise MissingWordInTranslation(
+        f"The string {item_id} is not defined in any language file in 'localization'."
+    )
+    return WLink(parent.find(item_id).attrib["Label"], parent.find(item_id).attrib["Link"])
 
 #bind language names to changes in the config file
 LANGUAGE_OPTIONS = dict()

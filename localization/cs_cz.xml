@@ -17,6 +17,13 @@
         <app_language Text="Jazyk"/>
     </LanguageMenu>
 
+    <HelpMenu>
+        <help_menu_title Text="Nápověda"/> 
+        <about Label="O programu" Link="https://jiristrouhal.wordpress.com/programming/opcut"/>
+        <tutorial Label="Tutoriál" Link="https://jiristrouhal.wordpress.com/programming/opcut/#tutorial"/>
+        <references Label="Popis" Link="https://jiristrouhal.wordpress.com/programming/opcut/#references"/>
+    </HelpMenu>
+
     <priority_frame>
         <what_to_optimize Text="Co optimalizovat: "/>
         <both Text="Obojí"/>

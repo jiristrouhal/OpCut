@@ -1,7 +1,14 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 
-<xs:complexType name="item"> <xs:attribute name="Text" type="xs:string"/> </xs:complexType>
+<xs:complexType name="item"> 
+    <xs:attribute name="Text" type="xs:string"/> 
+</xs:complexType>
+
+<xs:complexType name="link"> 
+    <xs:attribute name="Label" type="xs:string"/> 
+    <xs:attribute name="Link" type="xs:string"/>
+</xs:complexType>
 
 
 <xs:element name="Language">
@@ -10,6 +17,7 @@
 
             <xs:element name="ApplicationFrame" type="ApplicationFrame"/>
             <xs:element name="LanguageMenu" type="LanguageMenu"/>
+            <xs:element name="HelpMenu" type="HelpMenu"/>
             <xs:element name="priority_frame" type="PriorityFrame"/>
             <xs:element name="hints" type="Hints"/>
             <xs:element name="calculate" type="item"/>
@@ -35,6 +43,16 @@
 <xs:complexType name="LanguageMenu">
     <xs:sequence>
         <xs:element name="app_language" type="item"/>
+    </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="HelpMenu">
+    <xs:sequence>
+        <xs:element name="help_menu_title" type="item"/>
+        <xs:element name="about" type="link"/>
+        <xs:element name="tutorial" type="link"/>
+        <xs:element name="references" type="link"/>
     </xs:sequence>
 </xs:complexType>
 

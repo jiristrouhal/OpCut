@@ -2,7 +2,7 @@ import tkinter as tk
 import models.pick_and_cut as pc
 from typing import List
 import hints
-from config import wtext, LANGUAGE_OPTIONS, set_lang, language_change_notification
+from config import wtext, wlink, LANGUAGE_OPTIONS, set_lang, language_change_notification
 import tkinter.messagebox as msgbox
 from functools import partial
 
@@ -33,6 +33,27 @@ for language_id in LANGUAGE_OPTIONS:
         command=partial(change_language,language_id)
     )
 
+import webbrowser
+help_menu = tk.Menu(menu, tearoff=False)
+menu.add_cascade(label=wtext("help_menu_title","HelpMenu"),menu=help_menu)
+
+link_about = wlink("about","HelpMenu")
+help_menu.add_command(
+	label=link_about.label, 
+	command=partial(webbrowser.open,link_about.link))
+
+help_menu.add_separator()
+link_tutorial= wlink("tutorial","HelpMenu")
+help_menu.add_command(
+	label=link_tutorial.label, 
+	command=partial(webbrowser.open,link_tutorial.link))
+link_references = wlink("references","HelpMenu")
+help_menu.add_command(
+	label=link_references.label, 
+	command=partial(webbrowser.open,link_references.link))
+
+
+print(link_references)
 
 
 input_frame = tk.Frame(window)
