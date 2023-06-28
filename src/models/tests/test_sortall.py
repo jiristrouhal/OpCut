@@ -4,13 +4,12 @@
 #   Public repository: https://github.com/jiristrouhal/opcut.
 #   Use MznStrouhal@gmail.com to contact the author.
 
-
 import sys
-sys.path.insert(1,'D:/Users/MznSt/Desktop/BestCut/models')
+sys.path.append("./src")
 
 import unittest
-import sortall
-from sortall import Length, NotEnoughRawItems, Ordered_Raw
+import models.sortall as sortall
+from models.sortall import Length, NotEnoughRawItems, Ordered_Raw
 from typing import List, Dict
 
 

@@ -20,7 +20,7 @@ INPUT_BACKUP_FILE = "_last_.out"
 window = tk.Tk()
 window.geometry("800x600")
 window.title(wtext("app_title","ApplicationFrame"))
-window.iconbitmap(bitmap="images/icon.ico")
+window.iconbitmap(bitmap="src/images/icon.ico")
 
 
 menu = tk.Menu(window)
@@ -58,9 +58,6 @@ link_references = wlink("references","HelpMenu")
 help_menu.add_command(
 	label=link_references.label, 
 	command=partial(webbrowser.open,link_references.link))
-
-
-print(link_references)
 
 
 input_frame = tk.Frame(window)

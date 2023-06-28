@@ -4,6 +4,8 @@
 #   Public repository: https://github.com/jiristrouhal/opcut.
 #   Use MznStrouhal@gmail.com to contact the author.
 
+import sys
+sys.path.append("./src")
 
 import unittest
 import models.pickraw as pickraw

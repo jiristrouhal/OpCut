@@ -4,10 +4,12 @@
 #   Public repository: https://github.com/jiristrouhal/opcut.
 #   Use MznStrouhal@gmail.com to contact the author.
 
+import sys
+sys.path.append("./src")
 
 import unittest
 import models.pick_and_cut as pick_and_cut
-from pick_and_cut import Raw, Combined_Length, Cutted_Raw
+from models.pick_and_cut import Raw, Combined_Length, Cutted_Raw
 
 
 class Test_Single_Length(unittest.TestCase):

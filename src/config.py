@@ -16,7 +16,7 @@ class NoValidTranslationForApplication(Exception): pass
 class XML_DoesNotValidateAgainst(Warning): pass
 
 
-app_config = et.parse("config.xml")
+app_config = et.parse("src/config.xml")
 
 
 localization = app_config.getroot().find("Localization")
