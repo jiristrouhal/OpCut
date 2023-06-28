@@ -1,3 +1,10 @@
+#   Created by Jiří Strouhal (2023).
+#   Written in Python 3.10.10
+#   Licensed under the MIT License. See the LICENSE in the project root folder. 
+#   Public repository: https://github.com/jiristrouhal/opcut.
+#   Use MznStrouhal@gmail.com to contact the author.
+
+
 from __future__ import annotations
 import dataclasses
 from typing import List, Dict, Literal

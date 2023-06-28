@@ -1,0 +1,16 @@
+*.json
+.vscode
+.mypy_cache
+*.exe
+*.pyc
+.mypy_cache/**
+__pycache__
+tempCodeRunnerFile.py
+dummy.py
+*.txt
+*.out
+*.svg
+*.png
+build
+dist
+*.spec

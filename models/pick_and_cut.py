@@ -1,3 +1,10 @@
+#   Created by Jiří Strouhal (2023).
+#   Written in Python 3.10.10
+#   Licensed under the MIT License. See the LICENSE in the project root folder. 
+#   Public repository: https://github.com/jiristrouhal/opcut.
+#   Use MznStrouhal@gmail.com to contact the author.
+
+
 import models.pickraw as pickraw
 import models.sortall as sortall
 import models.cut as cut
