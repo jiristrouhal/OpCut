@@ -12,6 +12,7 @@ import hints
 from config import wtext, wlink, LANGUAGE_OPTIONS, set_lang, language_change_notification
 import tkinter.messagebox as msgbox
 from functools import partial
+import appdirs
 
 
 INPUT_BACKUP_FILE = "_last_.out"

@@ -9,6 +9,7 @@ import xml.etree.ElementTree as et
 import os
 from typing import Dict, List, Tuple
 import dataclasses
+import appdirs
 
 
 class MissingWordInTranslation(Exception): pass
@@ -92,7 +93,7 @@ for l in lang_files:
 
 def set_lang(language_id:str):
     localization.find("Language").text = language_id
-    app_config.write("config.xml")
+    app_config.write("src/config.xml")
 
 def language_change_notification(language_id:str)->Tuple[str,str]:
     return \
