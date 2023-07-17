@@ -90,28 +90,12 @@ def is_int_list(src:str)->bool:
 	return True
 
 
-def restrict_characters_in_raw_pieces_entry(src:str)->bool:
-	is_valid = True
-	all_valid_stock_items = True
-	if src.strip()=="": return True
-	if src[0]==";": return False
-	if re.match(r";[\D]*x?;",src): return False 
-
-	if src[-1]==';': src=src[:-1]
-
-	for item in src.split(';'):
-		item = item.strip()
-		if not (re.fullmatch(r"[(),\d]+",item) or item==""):
-			is_valid = False
-			break
-		elif not (re.fullmatch(r"\([\d]+[\s]*,[\s]*[\d]+\)",item)  or item==""):
-			all_valid_stock_items = False
-		elif re.match(r",[\w]\)*",item):
-			all_valid_stock_items = False
-		
-	if not all_valid_stock_items: stock_input.config(foreground="red")
+def restrict_characters_in_raw_pieces_entry(tested_input:str)->bool:
+	if re.fullmatch("[\)\(0123456789\,\; ]*",tested_input) is None: return False
+	
+	if not validate_input.is_raw_valid(tested_input): stock_input.config(foreground="red")
 	else: stock_input.config(foreground="black")
-	return is_valid
+	return True
 
 
 def auto_format_spaced_between_lengths(event:tk.Event)->None:
