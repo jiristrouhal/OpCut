@@ -12,7 +12,7 @@ import hints
 from config import wtext, wlink, LANGUAGE_OPTIONS, set_lang, language_change_notification
 import tkinter.messagebox as msgbox
 from functools import partial
-import appdirs
+import validate_input
 
 
 INPUT_BACKUP_FILE = "_last_.out"
@@ -90,7 +90,7 @@ def is_int_list(src:str)->bool:
 	return True
 
 
-def restrict_characters_in_stock_entry(src:str)->bool:
+def restrict_characters_in_raw_pieces_entry(src:str)->bool:
 	is_valid = True
 	all_valid_stock_items = True
 	if src.strip()=="": return True
@@ -145,7 +145,7 @@ priority_button_cost.pack(side=tk.RIGHT)
 
 
 vcmd_lengths = (window.register(is_int_list))
-vcmd_stock = (window.register(restrict_characters_in_stock_entry))
+vcmd_stock = (window.register(restrict_characters_in_raw_pieces_entry))
 lengths_input = tk.Entry(input_frame,width=100,validate="key",validatecommand=(vcmd_lengths,'%P'))
 lengths_input.bind("<FocusOut>",auto_format_spaced_between_lengths)
 lengths_input.pack()
