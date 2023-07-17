@@ -73,15 +73,15 @@ output_frame.pack(side=tk.BOTTOM,expand=2)
 
 from typing import List
 import re
-ITEM_DELIM = ";"
+
 def is_int_list(src:str)->bool:
 	if src.strip()=="": return True
-	if src[0]==";": return False
+	if src[0]==';': return False
 	if re.match(r";[\D]*;",src): return False 
 
-	if src[0]==ITEM_DELIM: src=src[1:]
+	if src[0]==';': src=src[1:]
 
-	for item in src.split(ITEM_DELIM):
+	for item in src.split(';'):
 		item = item.strip()
 		if not (re.fullmatch(r"\d+",item) or item==""):
 			return False
@@ -97,9 +97,9 @@ def restrict_characters_in_raw_pieces_entry(src:str)->bool:
 	if src[0]==";": return False
 	if re.match(r";[\D]*x?;",src): return False 
 
-	if src[-1]==ITEM_DELIM: src=src[:-1]
+	if src[-1]==';': src=src[:-1]
 
-	for item in src.split(ITEM_DELIM):
+	for item in src.split(';'):
 		item = item.strip()
 		if not (re.fullmatch(r"[(),\d]+",item) or item==""):
 			is_valid = False
@@ -116,7 +116,7 @@ def restrict_characters_in_raw_pieces_entry(src:str)->bool:
 
 def auto_format_spaced_between_lengths(event:tk.Event)->None:
 	src = lengths_input.get()
-	for digit in range(10): src=src.replace(f"{ITEM_DELIM}{digit}",f"{ITEM_DELIM} {digit}")
+	for digit in range(10): src=src.replace(f"{';'}{digit}",f"{';'} {digit}")
 	src= src.replace("  "," ")
 	lengths_input.delete(0,tk.END)
 	lengths_input.insert(0,src)
@@ -124,7 +124,7 @@ def auto_format_spaced_between_lengths(event:tk.Event)->None:
 
 def auto_add_space_before_left_parenthesis(event:tk.Event)->None:
 	src = lengths_input.get()
-	src=src.replace(f"{ITEM_DELIM}\(",f"{ITEM_DELIM} \(")
+	src=src.replace(f"{';'}\(",f"{';'} \(")
 	lengths_input.delete(0,tk.END)
 	lengths_input.insert(0,src)
 
@@ -172,7 +172,7 @@ def __underline(text:str)->str:
 
 
 def __read_lengths_input()->List[int]:
-	lengths_str:List[str] = lengths_input.get().split(ITEM_DELIM)
+	lengths_str:List[str] = lengths_input.get().split(';')
 	lengths:List[int] = list()
 	for li in lengths_str: 
 		li = li.strip()
@@ -182,7 +182,7 @@ def __read_lengths_input()->List[int]:
 
 
 def __read_stock_input()->List[pc.Raw]:
-	stock_str:List[str] = stock_input.get().split(ITEM_DELIM)
+	stock_str:List[str] = stock_input.get().split(';')
 	if len(stock_str)==0: return []
 	stock:List[pc.Raw] = list()
 	for s in stock_str:
