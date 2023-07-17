@@ -17,3 +17,6 @@ dist
 *.wxs
 *.wixproj
 OpCut_group_refs.xml
+*.wxl
+obj
+bin
