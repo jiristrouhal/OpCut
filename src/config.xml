@@ -8,6 +8,6 @@
 
 <Root>
     <Localization LangDirectory="src/localization/">
-        <Language>cs_cz</Language>
+        <Language>en_us</Language>
     </Localization>
 </Root>

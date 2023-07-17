@@ -13,9 +13,17 @@ from config import wtext, wlink, LANGUAGE_OPTIONS, set_lang, language_change_not
 import tkinter.messagebox as msgbox
 from functools import partial
 import validate_input
+import appdirs
+import os
 
+
+APP_NAME = "OpCut"
+AUTHOR_NAME = "OpCut"
+
+LOCAL_DATA_FOLDER = appdirs.user_data_dir(APP_NAME, AUTHOR_NAME)
 
 INPUT_BACKUP_FILE = "_last_.out"
+INPUT_BACKUP_FILE_PATH = os.path.join(LOCAL_DATA_FOLDER, INPUT_BACKUP_FILE)
 
 
 window = tk.Tk()
@@ -214,7 +222,8 @@ def __redraw_combined_lengths(lengths:List[pc.Combined_Length])->None:
 
 
 def store_used()->None:
-	with open(INPUT_BACKUP_FILE,'w') as fw:
+	if not os.path.isdir(LOCAL_DATA_FOLDER): os.makedirs(LOCAL_DATA_FOLDER)
+	with open(INPUT_BACKUP_FILE_PATH,'w') as fw:
 		lengths_input_line = lengths_input.get()+'\n'
 		stock_input_line = stock_input.get()
 		fw.writelines([lengths_input_line,stock_input_line])
@@ -289,8 +298,9 @@ print_button.pack(side=tk.BOTTOM)
 import os.path
 
 def load_on_start()->None:
-	if not os.path.isfile(INPUT_BACKUP_FILE): return 
-	with open(INPUT_BACKUP_FILE,'r') as fr:
+	if not os.path.isdir(LOCAL_DATA_FOLDER): os.makedirs(LOCAL_DATA_FOLDER)
+	if not os.path.isfile(INPUT_BACKUP_FILE_PATH): return 
+	with open(INPUT_BACKUP_FILE_PATH,'r') as fr:
 		lengths = fr.readline().replace('\n','')
 		stock = fr.readline().replace('\n','')
 		if lengths!="": assert(lengths[-1]!='\n')

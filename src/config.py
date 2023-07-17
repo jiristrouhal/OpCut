@@ -10,6 +10,14 @@ import os
 from typing import Dict, List, Tuple
 import dataclasses
 import appdirs
+import shutil
+
+
+APP_NAME = "OpCut"
+AUTHOR_NAME = "OpCut"
+LOCAL_DATA_FOLDER = appdirs.user_data_dir(APP_NAME, AUTHOR_NAME)
+CONFIG_FILE_NAME = "config.xml"
+CONFIG_FILE_PATH = os.path.join(LOCAL_DATA_FOLDER,CONFIG_FILE_NAME)
 
 
 class MissingWordInTranslation(Exception): pass
@@ -17,11 +25,16 @@ class NoValidTranslationForApplication(Exception): pass
 class XML_DoesNotValidateAgainst(Warning): pass
 
 
-app_config = et.parse("src/config.xml")
+try: 
+    app_config = et.parse(CONFIG_FILE_PATH)
+except:
+    if not os.path.isdir(LOCAL_DATA_FOLDER): os.makedirs(LOCAL_DATA_FOLDER)
+    shutil.copyfile("src/config.xml",CONFIG_FILE_PATH)
+    app_config = et.parse(CONFIG_FILE_PATH)
 
 
 localization = app_config.getroot().find("Localization")
-loc_path = localization.attrib["LangDirectory"]
+if localization is not None: loc_path = localization.attrib["LangDirectory"]
 
 #store only lang files
 lang_files:Dict[str,et.ElementTree] = dict()
@@ -93,7 +106,7 @@ for l in lang_files:
 
 def set_lang(language_id:str):
     localization.find("Language").text = language_id
-    app_config.write("src/config.xml")
+    app_config.write(CONFIG_FILE_PATH)
 
 def language_change_notification(language_id:str)->Tuple[str,str]:
     return \
