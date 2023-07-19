@@ -28,9 +28,9 @@
 
     <HelpMenu>
         <help_menu_title Text="Nápověda"/> 
-        <about Label="O programu" Link="https://jiristrouhal.wordpress.com/programming/opcut"/>
-        <tutorial Label="Tutoriál" Link="https://jiristrouhal.wordpress.com/programming/opcut/#tutorial"/>
-        <references Label="Popis" Link="https://jiristrouhal.wordpress.com/programming/opcut/#references"/>
+        <about Label="O programu" Link="https://jiristrouhal.wordpress.com/cz/programovani/opcut"/>
+        <tutorial Label="Tutoriál" Link="https://jiristrouhal.wordpress.com/cz/programovani/opcut/#tutorial"/>
+        <references Label="Popis" Link="https://jiristrouhal.wordpress.com/cz/programovani/opcut/#references"/>
     </HelpMenu>
 
     <priority_frame>
